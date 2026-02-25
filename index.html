@@ -1,326 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Who Wants to Be a Clinician</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet" />
   <style>
-    body { margin: 0; font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif; }
-    .glow-green { text-shadow: 0 0 30px rgba(16,185,129,0.9), 0 2px 8px rgba(0,0,0,0.5); }
-    .glow-pink  { text-shadow: 0 0 30px rgba(236,72,153,0.8), 0 2px 6px rgba(0,0,0,0.5); }
-    .card-glow  { box-shadow: 0 0 60px rgba(16,185,129,0.4), inset 0 0 60px rgba(16,185,129,0.15); }
-    .btn-glow-green { box-shadow: 0 0 30px rgba(16,185,129,0.5); }
-    .btn-glow-pink  { box-shadow: 0 0 30px rgba(236,72,153,0.5); }
-    .btn-glow-red   { box-shadow: 0 0 30px rgba(239,68,68,0.4); }
-    .score-glow { text-shadow: 0 0 40px rgba(236,72,153,0.9), 0 0 20px rgba(16,185,129,0.6), 0 2px 10px rgba(0,0,0,0.5); }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',sans-serif;min-height:100vh;background:linear-gradient(135deg,#0f172a,#064e3b,#134e4a);color:white;padding:1.5rem}
+    h1{font-size:clamp(1.4rem,4vw,2.8rem);font-weight:900;text-align:center;margin-bottom:1.5rem;text-shadow:0 0 40px rgba(16,185,129,0.9),0 0 20px rgba(236,72,153,0.4)}
+    .card{background:rgba(255,255,255,0.08);border:1px solid rgba(16,185,129,0.4);border-radius:1rem;padding:1.5rem;margin-bottom:1.25rem;box-shadow:0 0 40px rgba(16,185,129,0.3)}
+    .glow{text-shadow:0 0 20px rgba(16,185,129,0.9)}
+    .pink-glow{text-shadow:0 0 20px rgba(236,72,153,0.8)}
+    input{padding:.65rem 1rem;border-radius:.65rem;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.4);color:white;font-size:1rem;outline:none;font-family:inherit;width:100%}
+    input::placeholder{color:rgba(255,255,255,0.4)}
+    button{cursor:pointer;border:none;border-radius:.65rem;font-weight:700;font-family:inherit;transition:transform .12s}
+    button:hover{transform:scale(1.04)}
+    .btn-green{background:linear-gradient(135deg,#10b981,#0d9488);color:white;padding:.7rem 1.4rem;font-size:1rem;box-shadow:0 0 20px rgba(16,185,129,0.4)}
+    .btn-pink{background:linear-gradient(135deg,#ec4899,#a855f7);color:white;padding:.5rem .9rem;font-size:1rem;box-shadow:0 0 20px rgba(236,72,153,0.4)}
+    .btn-red{background:linear-gradient(135deg,#ef4444,#ec4899);color:white;padding:.7rem 1.4rem;font-size:1rem}
+    .btn-cyan{background:linear-gradient(135deg,#10b981,#06b6d4);color:white;padding:.7rem 1.4rem;font-size:1rem}
+    .btn-multi{background:linear-gradient(135deg,#10b981,#ec4899);color:white;padding:.7rem 1.4rem;font-size:1rem}
+    .row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+    .team-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.05);border:1px solid rgba(16,185,129,0.3);border-radius:.75rem;padding:.85rem 1.1rem;margin-bottom:.5rem}
+    .score{font-size:2rem;font-weight:900;text-shadow:0 0 30px rgba(236,72,153,0.9)}
+    .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .cat-btn{padding:1.4rem;background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;color:white;font-size:1.15rem;font-weight:900;text-shadow:0 0 20px rgba(16,185,129,0.8);text-align:center}
+    .cat-sub{font-size:.85rem;font-weight:500;margin-top:.3rem;color:rgba(255,255,255,0.6);text-shadow:none}
+    .q-box{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;padding:1.75rem;margin-bottom:1rem;font-size:1.35rem;font-weight:700;white-space:pre-line;line-height:1.6;text-shadow:0 0 20px rgba(16,185,129,0.7)}
+    .a-box{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(6,182,212,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;padding:1.5rem;font-size:1.2rem;line-height:1.6}
+    .score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem}
+    .score-card{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:.75rem;padding:1rem;text-align:center}
+    .ctrl-row{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-bottom:1.25rem}
+    .subtitle{text-align:center;font-size:1.15rem;font-weight:700;margin-bottom:1.5rem}
   </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState } = React;
-
-const categories = [
+<div id="app"></div>
+<script>
+var categories = [
   {
     name: "TamVegas",
     questions: [
-      { q: "If you travelled north from Newcastle along the New England Highway, what is the name of the major road you would have entered Tamworth on?", a: "Goonoo Goonoo Road" },
-      { q: "What is the closest pub to the Tamworth Education Centre?", a: "Joe Macguires" },
-      { q: "Where can you buy marinated crocodile in Tamworth?", a: "The Safari Club" },
-      { q: "What is involved in the rodeo event 'steer wrestling'? Bonus: What is this event also called?", a: "A horse-mounted rider chases a steer, drops from the horse to the steer, then wrestles the steer to the ground by twisting its horns. Objective is to get all four legs of the steer off the ground in the fastest time. AKA 'bulldogging'." },
-      { q: "Where is the fire station located in Tamworth?", a: "Carthage Street, The Ringers Road (South Tamworth Fire Station)" },
-      { q: "Tamworth was the first place in Australia to use:\n\na) Motorised scoots\nb) Electric street lights\nc) Cordless phones\nd) Electric ovens\n\nBonus: What year?", a: "b) Electric street lights - 1888" },
-      { q: "If you saw a blue tractor, what brand would it be?", a: "New Holland, Ford, LS, Farmtrac, Hinomoto" },
-      { q: "In what year was Tamworth proclaimed a city?\n\na) 1946\nb) 1777\nc) 1918\nd) It hasn't yet", a: "a) 1946" },
-      { q: "Which dam provides Tamworth's water supply?", a: "Chaffey Dam" },
-      { q: "What do the following acronyms represent?\n\nAELEC\nTRC\nTEC\nTREC\nNCHA", a: "Australian Equine and Livestock Events Centre, Tamworth Regional Council, Tamworth Education Centre, Tamworth Regional Entertainment Centre, National Cutting Horse Association" }
+      {q: "If you travelled north from Newcastle along the New England Highway, what is the name of the major road you would have entered Tamworth on?", a: "Goonoo Goonoo Road"},
+      {q: "What is the closest pub to the Tamworth Education Centre?", a: "Joe Macguires"},
+      {q: "Where can you buy marinated crocodile in Tamworth?", a: "The Safari Club"},
+      {q: "What is involved in the rodeo event steer wrestling?\nBonus: What is this event also called?", a: "A horse-mounted rider chases a steer, drops from the horse, then wrestles the steer to the ground by twisting its horns. All four legs must leave the ground. Also called bulldogging."},
+      {q: "Where is the fire station located in Tamworth?", a: "Carthage Street / The Ringers Road (South Tamworth Fire Station)"},
+      {q: "Tamworth was the first place in Australia to use:\n\na) Motorised scoots\nb) Electric street lights\nc) Cordless phones\nd) Electric ovens\n\nBonus: What year?", a: "b) Electric street lights — 1888"},
+      {q: "If you saw a blue tractor, what brand would it be?", a: "New Holland, Ford, LS, Farmtrac, Hinomoto"},
+      {q: "In what year was Tamworth proclaimed a city?\n\na) 1946\nb) 1777\nc) 1918\nd) It hasn't yet", a: "a) 1946"},
+      {q: "Which dam provides Tamworth's water supply?", a: "Chaffey Dam"},
+      {q: "What do the following acronyms represent?\n\nAELEC\nTRC\nTEC\nTREC\nNCHA", a: "Australian Equine and Livestock Events Centre, Tamworth Regional Council, Tamworth Education Centre, Tamworth Regional Entertainment Centre, National Cutting Horse Association"}
     ]
   },
   {
     name: "Sport",
     questions: [
-      { q: "What sport is Toby Price best known for?", a: "Australian off-road and enduro motorcycle racing" },
-      { q: "Who is the Matildas Captain currently?", a: "Sam Kerr" },
-      { q: "Josh Hazlewood, champion Australian cricketer, calls home to which town in our region?", a: "Bendemeer" },
-      { q: "Which Australian tennis star won Wimbledon in 2021?", a: "Ash Barty" },
-      { q: "How many times has Australia hosted the Olympics?", a: "Twice -- Sydney 2000, Melbourne 1956" },
-      { q: "Which sport did William Henzell play at the London 2012 Olympics?", a: "Table Tennis" },
-      { q: "Who won the men's and women's singles at the 2021 Australian Open?", a: "Rafael Nadal and Ash Barty" },
-      { q: "How long is a marathon? Bonus: What is the current world record?", a: "42.195km. World record: 2:00:35 Kelvin Kiptum (Kenya) set in Chicago 2023" },
-      { q: "Which Australian netball team has won the most Suncorp Super Netball titles since the competition began in 2017?", a: "Sunshine Coast Lightning (2 titles: 2017, 2018)" },
-      { q: "What is the name of the trophy awarded to the winners of the State of Origin series?", a: "State of Origin Shield" }
+      {q: "What sport is Toby Price best known for?", a: "Australian off-road and enduro motorcycle racing"},
+      {q: "Who is the Matildas Captain currently?", a: "Sam Kerr"},
+      {q: "Josh Hazlewood, champion Australian cricketer, calls home to which town in our region?", a: "Bendemeer"},
+      {q: "Which Australian tennis star won Wimbledon in 2021?", a: "Ash Barty"},
+      {q: "How many times has Australia hosted the Olympics?", a: "Twice — Sydney 2000, Melbourne 1956"},
+      {q: "Which sport did William Henzell play at the London 2012 Olympics?", a: "Table Tennis"},
+      {q: "Who won the men's and women's singles at the 2021 Australian Open?", a: "Rafael Nadal and Ash Barty"},
+      {q: "How long is a marathon?\nBonus: What is the current world record?", a: "42.195km. World record: 2:00:35 — Kelvin Kiptum (Kenya), Chicago 2023"},
+      {q: "Which Australian netball team has won the most Suncorp Super Netball titles since 2017?", a: "Sunshine Coast Lightning (2 titles: 2017, 2018)"},
+      {q: "What is the name of the trophy awarded to the winners of the State of Origin series?", a: "State of Origin Shield"}
     ]
   },
   {
     name: "Pop Culture",
     questions: [
-      { q: "Who played Kath and Kim in the Australian series of the same name?", a: "Jane Turner and Gina Riley" },
-      { q: "Who wore the famous dress before Kim Kardashian? (Show image if you have it)", a: "Marilyn Monroe" },
-      { q: "Name this artist (Show image if you have it)", a: "Dom Dolla" },
-      { q: "Which breakfast TV personality was in a band called 'Wilde and Reckless'?\n\na) David Koch\nb) Richard Wilkins\nc) Karl Stefanovic\nd) Peter Stefanovic", a: "b) Richard Wilkins" },
-      { q: "Season 3 of The White Lotus took place in which country?", a: "Thailand" },
-      { q: "What are the names of Taylor Swift's cats?", a: "Meredith Grey, Olivia Benson & Benjamin Button" },
-      { q: "Which Australian movie had the quote 'Tell him he's dreaming'?", a: "The Castle" },
-      { q: "What viral ad starts with Jess Glynne's song 'Hold My Hand' and features bad vacation videos?", a: "Jet2 holiday ad" },
-      { q: "What is Chandler Bing's job in Friends (actual job title)?", a: "Statistical Analysis and Data Reconfiguration" },
-      { q: "What Spice Girl was Victoria Beckham?", a: "Posh Spice" }
+      {q: "Who played Kath and Kim in the Australian series of the same name?", a: "Jane Turner and Gina Riley"},
+      {q: "Who wore the famous dress before Kim Kardashian?", a: "Marilyn Monroe"},
+      {q: "Name this artist — show image to teams", a: "Dom Dolla"},
+      {q: "Which breakfast TV personality was in a band called Wilde and Reckless?\n\na) David Koch\nb) Richard Wilkins\nc) Karl Stefanovic\nd) Peter Stefanovic", a: "b) Richard Wilkins"},
+      {q: "Season 3 of The White Lotus took place in which country?", a: "Thailand"},
+      {q: "What are the names of Taylor Swift's cats?", a: "Meredith Grey, Olivia Benson and Benjamin Button"},
+      {q: "Which Australian movie had the quote: Tell him he's dreaming", a: "The Castle"},
+      {q: "What viral ad starts with Jess Glynne's song Hold My Hand and features bad vacation videos?", a: "Jet2 holiday ad"},
+      {q: "What is Chandler Bing's job in Friends — actual job title?", a: "Statistical Analysis and Data Reconfiguration"},
+      {q: "What Spice Girl was Victoria Beckham?", a: "Posh Spice"}
     ]
   },
   {
     name: "Mixed Bag",
     questions: [
-      { q: "What is someone who shoes horses called?", a: "A farrier" },
-      { q: "What is the sixth planet from the sun?", a: "Saturn" },
-      { q: "What city in France does Elton John own a home?", a: "Nice" },
-      { q: "What was the name of Ross and Monica's childhood dog in Friends?", a: "Chi-Chi" },
-      { q: "What is the only Australian mammal that lays eggs and has electroreceptors to detect prey underwater?", a: "The platypus" },
-      { q: "I was nominated for Young Australian of the Year in 1990 and Australian of the Year in 1998. I am the first person to receive both awards. Who am I?", a: "Cathy Freeman" },
-      { q: "What is the symbol for the chemical element Potassium? Bonus: What is Potassium's atomic number?", a: "K. Atomic number: 19" },
-      { q: "Which comedy show celebrated its 50th anniversary in 2025?", a: "Saturday Night Live" },
-      { q: "What is pogonophobia a fear of?", a: "Beards" },
-      { q: "What was this item used for? (Show image if you have it)", a: "Coffee Grinder" }
+      {q: "What is someone who shoes horses called?", a: "A farrier"},
+      {q: "What is the sixth planet from the sun?", a: "Saturn"},
+      {q: "What city in France does Elton John own a home?", a: "Nice"},
+      {q: "What was the name of Ross and Monica's childhood dog in Friends?", a: "Chi-Chi"},
+      {q: "What is the only Australian mammal that lays eggs and has electroreceptors to detect prey underwater?", a: "The platypus"},
+      {q: "I was nominated for Young Australian of the Year in 1990 and Australian of the Year in 1998. I am the first person to receive both awards. Who am I?", a: "Cathy Freeman"},
+      {q: "What is the symbol for the chemical element Potassium?\nBonus: What is Potassium's atomic number?", a: "K. Atomic number: 19"},
+      {q: "Which comedy show celebrated its 50th anniversary in 2025?", a: "Saturday Night Live"},
+      {q: "What is pogonophobia a fear of?", a: "Beards"},
+      {q: "What was this item used for? — show image to teams", a: "Coffee Grinder"}
     ]
   },
   {
-    name: "✈️ Paper Airplane",
+    name: "Paper Airplane",
     questions: [
-      { q: "🛩️ Paper Airplane Challenge!\n\nEach team creates and flies one paper airplane.\n\nWhich team's airplane will fly the farthest?", a: "Winner determined by flight distance!" }
+      {q: "Paper Airplane Challenge!\n\nEach team creates and flies one paper airplane.\n\nWhich team's airplane will fly the farthest?", a: "Winner determined by flight distance!"}
     ]
   },
   {
-    name: "🏆 Bonus Points",
+    name: "Bonus Points",
     questions: [
-      { q: "📸 The Caption Game\n\nA photo will be shown.\n\nTeams submit a caption.\n\nHost chooses the funniest = bonus points!", a: "Funniest caption wins!" },
-      { q: "🔍 Zoomed In Chaos #1\n\nA zoomed-in photo will be shown.\n\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!" },
-      { q: "🔍 Zoomed In Chaos #2\n\nAnother zoomed-in photo will be shown.\n\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!" },
-      { q: "🧍 Line Up Challenge\n\nTeams must line themselves up WITHOUT TALKING based on HEIGHT (shortest to tallest).\n\nFirst team to correctly line up wins!", a: "Fastest correct lineup wins bonus points!" },
-      { q: "✊✋✌️ Human-Sized Paper Scissors Rock Tournament\n\nEach team sends 1 person.\n\nSingle elimination bracket.\n\nWinner scores bonus points for their team!", a: "Tournament winner's team gets bonus points!" }
+      {q: "The Caption Game\n\nA photo will be shown. Teams submit a caption.\nHost chooses the funniest = bonus points!", a: "Funniest caption wins!"},
+      {q: "Zoomed In Chaos #1\n\nA zoomed-in photo will be shown.\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!"},
+      {q: "Zoomed In Chaos #2\n\nAnother zoomed-in photo will be shown.\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!"},
+      {q: "Line Up Challenge\n\nTeams must line up WITHOUT TALKING\nbased on HEIGHT (shortest to tallest).\n\nFirst correct team wins!", a: "Fastest correct lineup wins bonus points!"},
+      {q: "Human Paper Scissors Rock\n\nEach team sends 1 person.\nSingle elimination bracket.\nWinner scores bonus points for their team!", a: "Tournament winner gets bonus points!"}
     ]
   }
 ];
 
-function App() {
-  const [teams, setTeams] = useState([]);
-  const [newTeamName, setNewTeamName] = useState('');
-  const [currentCategory, setCurrentCategory] = useState(null);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [editingTeam, setEditingTeam] = useState(null);
-  const [pointsToAdd, setPointsToAdd] = useState('');
+var teams = [];
+var currentCat = null;
+var currentQ = 0;
+var showAnswer = false;
+var editingTeam = null;
 
-  const addTeam = () => {
-    if (newTeamName.trim()) {
-      setTeams([...teams, { name: newTeamName.trim(), score: 0 }]);
-      setNewTeamName('');
-    }
-  };
-
-  const updateScore = (idx, pts) => {
-    const t = [...teams];
-    t[idx].score += parseInt(pts) || 0;
-    setTeams(t);
-    setEditingTeam(null);
-    setPointsToAdd('');
-  };
-
-  const startCategory = (i) => {
-    setCurrentCategory(i);
-    setCurrentQuestion(0);
-    setShowAnswer(false);
-    setGameStarted(true);
-  };
-
-  const nextQuestion = () => {
-    if (currentQuestion < categories[currentCategory].questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setShowAnswer(false);
-    } else {
-      setCurrentCategory(null);
-      setGameStarted(false);
-    }
-  };
-
-  const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
-
-  if (!gameStarted) return (
-    <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #0f172a, #064e3b, #134e4a)', padding:'2rem'}}>
-      <div style={{maxWidth:'900px', margin:'0 auto'}}>
-
-        {/* Title */}
-        <div style={{textAlign:'center', marginBottom:'2.5rem'}}>
-          <h1 style={{fontSize:'clamp(2rem,5vw,4rem)', fontWeight:900, color:'white', lineHeight:1.1,
-            textShadow:'0 0 60px rgba(16,185,129,0.9), 0 0 30px rgba(236,72,153,0.4), 0 4px 20px rgba(0,0,0,0.5)'}}>
-            WHO WANTS TO BE A <span style={{textDecoration:'line-through'}}>MILLIONAIRE</span>{' '}
-            <span style={{textDecoration:'underline'}}>CLINICIAN</span>! 💉
-          </h1>
-        </div>
-
-        {/* Team Setup */}
-        <div style={{background:'rgba(255,255,255,0.08)', border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'2rem', marginBottom:'1.5rem'}} className="card-glow">
-          <h3 style={{color:'white', fontSize:'1.5rem', fontWeight:800, marginBottom:'1rem'}} className="glow-green">👥 Team Setup</h3>
-          <div style={{display:'flex', gap:'0.75rem', marginBottom:'1rem'}}>
-            <input
-              type="text" value={newTeamName}
-              onChange={e => setNewTeamName(e.target.value)}
-              onKeyPress={e => e.key === 'Enter' && addTeam()}
-              placeholder="Enter team name..."
-              style={{flex:1, padding:'0.75rem 1rem', borderRadius:'0.75rem', background:'rgba(255,255,255,0.05)',
-                border:'1px solid rgba(16,185,129,0.4)', color:'white', fontSize:'1rem', outline:'none'}}
-            />
-            <button onClick={addTeam}
-              style={{padding:'0.75rem 1.5rem', background:'linear-gradient(135deg,#10b981,#0d9488)', color:'white',
-                border:'none', borderRadius:'0.75rem', fontWeight:700, cursor:'pointer', fontSize:'1rem'}}
-              className="btn-glow-green">
-              Add Team
-            </button>
-          </div>
-
-          {sortedTeams.map((team, i) => {
-            const realIdx = teams.indexOf(team);
-            return (
-              <div key={i} style={{display:'flex', justifyContent:'space-between', alignItems:'center',
-                background:'rgba(255,255,255,0.05)', border:'1px solid rgba(16,185,129,0.3)',
-                borderRadius:'0.75rem', padding:'1rem 1.25rem', marginBottom:'0.5rem'}}>
-                <span style={{color:'white', fontWeight:700, fontSize:'1.1rem'}} className="glow-green">
-                  {i === 0 && '🏆 '}{team.name}
-                </span>
-                <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
-                  <span style={{fontSize:'2rem', fontWeight:900, color:'white'}} className="score-glow">{team.score}</span>
-                  {editingTeam === realIdx ? (
-                    <div style={{display:'flex', gap:'0.5rem'}}>
-                      <input type="number" value={pointsToAdd} onChange={e => setPointsToAdd(e.target.value)}
-                        placeholder="Pts" style={{width:'70px', padding:'0.5rem', borderRadius:'0.5rem',
-                          background:'rgba(255,255,255,0.05)', border:'1px solid rgba(16,185,129,0.4)',
-                          color:'white', textAlign:'center', outline:'none'}} />
-                      <button onClick={() => updateScore(realIdx, pointsToAdd)}
-                        style={{padding:'0.5rem 0.75rem', background:'linear-gradient(135deg,#22c55e,#10b981)',
-                          border:'none', borderRadius:'0.5rem', color:'white', fontWeight:700, cursor:'pointer'}}>✓</button>
-                    </div>
-                  ) : (
-                    <button onClick={() => setEditingTeam(realIdx)}
-                      style={{padding:'0.5rem 0.75rem', background:'linear-gradient(135deg,#ec4899,#a855f7)',
-                        border:'none', borderRadius:'0.5rem', color:'white', fontWeight:700, cursor:'pointer', fontSize:'1rem'}}
-                      className="btn-glow-pink">+</button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Category Grid */}
-        <div style={{background:'rgba(255,255,255,0.08)', border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'2rem'}} className="card-glow">
-          <h3 style={{color:'white', fontSize:'1.5rem', fontWeight:800, marginBottom:'1.25rem'}} className="glow-green">Select Category</h3>
-          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(250px,1fr))', gap:'1rem'}}>
-            {categories.map((cat, i) => (
-              <button key={i} onClick={() => startCategory(i)}
-                style={{padding:'1.5rem', background:'linear-gradient(135deg,rgba(16,185,129,0.25),rgba(236,72,153,0.15))',
-                  border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', color:'white', cursor:'pointer',
-                  transition:'transform 0.15s', fontFamily:'inherit'}}
-                onMouseEnter={e => e.currentTarget.style.transform='scale(1.04)'}
-                onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
-                <div style={{fontSize:'1.3rem', fontWeight:900}} className="glow-green">{cat.name}</div>
-                <div style={{fontSize:'0.95rem', marginTop:'0.4rem', color:'rgba(255,255,255,0.7)'}}>{cat.questions.length} Questions</div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const q = categories[currentCategory].questions[currentQuestion];
-
-  return (
-    <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #0f172a, #064e3b, #134e4a)', padding:'2rem'}}>
-      <div style={{maxWidth:'900px', margin:'0 auto'}}>
-
-        {/* Header */}
-        <div style={{textAlign:'center', marginBottom:'1.5rem'}}>
-          <h1 style={{fontSize:'2.5rem', fontWeight:900, color:'white', marginBottom:'0.25rem'}} className="glow-green">
-            {categories[currentCategory].name}
-          </h1>
-          <div style={{color:'white', fontSize:'1.2rem', fontWeight:700}} className="glow-pink">
-            Question {currentQuestion + 1} of {categories[currentCategory].questions.length}
-          </div>
-        </div>
-
-        {/* Question Card */}
-        <div style={{background:'rgba(255,255,255,0.08)', border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'2rem', marginBottom:'1.25rem'}} className="card-glow">
-          <div style={{background:'linear-gradient(135deg,rgba(16,185,129,0.25),rgba(236,72,153,0.15))',
-            border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'2rem', marginBottom:'1.25rem'}}>
-            <p style={{color:'white', fontSize:'1.5rem', fontWeight:700, textAlign:'center', whiteSpace:'pre-line', lineHeight:1.6}} className="glow-green">
-              {q.q}
-            </p>
-          </div>
-
-          {showAnswer && (
-            <div style={{background:'linear-gradient(135deg,rgba(16,185,129,0.25),rgba(6,182,212,0.15))',
-              border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'1.5rem'}}>
-              <p style={{color:'white', fontWeight:900, fontSize:'1.1rem', marginBottom:'0.5rem'}} className="glow-green">Answer:</p>
-              <p style={{color:'white', fontSize:'1.2rem', fontWeight:700, lineHeight:1.6}} className="glow-green">{q.a}</p>
-            </div>
-          )}
-        </div>
-
-        {/* Controls */}
-        <div style={{display:'flex', flexWrap:'wrap', gap:'0.75rem', justifyContent:'center', marginBottom:'1.5rem'}}>
-          <button onClick={() => { setCurrentCategory(null); setGameStarted(false); }}
-            style={{padding:'0.75rem 1.5rem', background:'linear-gradient(135deg,#ef4444,#ec4899)',
-              border:'none', borderRadius:'0.75rem', color:'white', fontWeight:700, cursor:'pointer', fontSize:'1rem', fontFamily:'inherit'}}
-            className="btn-glow-red">← Back to Main</button>
-          <button onClick={() => setShowAnswer(!showAnswer)}
-            style={{padding:'0.75rem 1.5rem', background:'linear-gradient(135deg,#10b981,#ec4899)',
-              border:'none', borderRadius:'0.75rem', color:'white', fontWeight:700, cursor:'pointer', fontSize:'1rem', fontFamily:'inherit'}}
-            className="btn-glow-green">{showAnswer ? 'Hide Answer' : 'Reveal Answer'}</button>
-          <button onClick={nextQuestion}
-            style={{padding:'0.75rem 1.5rem', background:'linear-gradient(135deg,#10b981,#06b6d4)',
-              border:'none', borderRadius:'0.75rem', color:'white', fontWeight:700, cursor:'pointer', fontSize:'1rem', fontFamily:'inherit'}}
-            className="btn-glow-green">
-            {currentQuestion < categories[currentCategory].questions.length - 1 ? 'Next Question →' : 'Finish Category ✓'}
-          </button>
-        </div>
-
-        {/* Scoreboard */}
-        <div style={{background:'rgba(255,255,255,0.08)', border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'1.5rem'}} className="card-glow">
-          <h3 style={{color:'white', fontSize:'1.25rem', fontWeight:800, marginBottom:'1rem'}} className="glow-green">🏅 Current Scores</h3>
-          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(140px,1fr))', gap:'0.75rem'}}>
-            {teams.map((team, i) => (
-              <div key={i} style={{background:'linear-gradient(135deg,rgba(16,185,129,0.25),rgba(236,72,153,0.15))',
-                border:'1px solid rgba(16,185,129,0.4)', borderRadius:'0.75rem', padding:'1rem', textAlign:'center'}}>
-                <div style={{color:'white', fontWeight:700, marginBottom:'0.25rem', fontSize:'0.95rem'}} className="glow-green">{team.name}</div>
-                <div style={{fontSize:'2.5rem', fontWeight:900, color:'white'}} className="score-glow">{team.score}</div>
-                {editingTeam === i ? (
-                  <div style={{display:'flex', gap:'0.4rem', marginTop:'0.5rem', justifyContent:'center'}}>
-                    <input type="number" value={pointsToAdd} onChange={e => setPointsToAdd(e.target.value)}
-                      placeholder="Pts" style={{width:'55px', padding:'0.3rem', borderRadius:'0.4rem',
-                        background:'rgba(255,255,255,0.05)', border:'1px solid rgba(16,185,129,0.4)',
-                        color:'white', textAlign:'center', outline:'none', fontFamily:'inherit'}} />
-                    <button onClick={() => updateScore(i, pointsToAdd)}
-                      style={{padding:'0.3rem 0.6rem', background:'#22c55e', border:'none',
-                        borderRadius:'0.4rem', color:'white', fontWeight:700, cursor:'pointer'}}>✓</button>
-                  </div>
-                ) : (
-                  <button onClick={() => setEditingTeam(i)}
-                    style={{marginTop:'0.5rem', padding:'0.3rem 0.75rem', background:'linear-gradient(135deg,#ec4899,#a855f7)',
-                      border:'none', borderRadius:'0.5rem', color:'white', fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
-                    className="btn-glow-pink">+ Score</button>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+function render() {
+  document.getElementById("app").innerHTML = currentCat === null ? mainScreen() : questionScreen();
+  bindEvents();
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+function mainScreen() {
+  var sorted = teams.slice().sort(function(a,b){ return b.score - a.score; });
+  var teamRows = sorted.map(function(t, i) {
+    var ri = teams.indexOf(t);
+    var scoreControls = editingTeam === ri
+      ? "<input id='pts-input' type='number' placeholder='Pts' style='width:65px;padding:.35rem;text-align:center;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.4);color:white;border-radius:.5rem;outline:none;font-family:inherit'/>" +
+        "<button class='btn-green' style='padding:.4rem .8rem' onclick='applyScore(" + ri + ")'>OK</button>" +
+        "<button class='btn-red' style='padding:.4rem .8rem' onclick='cancelEdit()'>X</button>"
+      : "<button class='btn-pink' onclick='startEdit(" + ri + ")'>+ Score</button>";
+    return "<div class='team-row'>" +
+      "<span class='glow' style='font-weight:700;font-size:1.05rem'>" + (i===0 ? "🏆 " : "") + t.name + "</span>" +
+      "<div class='row'><span class='score'>" + t.score + "</span>" + scoreControls + "</div>" +
+      "</div>";
+  }).join("");
+
+  var catBtns = categories.map(function(c, i) {
+    return "<button class='cat-btn' onclick='startCat(" + i + ")'>" + c.name +
+      "<div class='cat-sub'>" + c.questions.length + " question" + (c.questions.length > 1 ? "s" : "") + "</div></button>";
+  }).join("");
+
+  return "<h1>WHO WANTS TO BE A <s>MILLIONAIRE</s> CLINICIAN! 💉</h1>" +
+    "<div class='card'>" +
+      "<h3 class='glow' style='font-size:1.3rem;margin-bottom:1rem'>Team Setup</h3>" +
+      "<div class='row' style='margin-bottom:1rem'>" +
+        "<input id='team-input' type='text' placeholder='Enter team name...' style='flex:1;min-width:150px'/>" +
+        "<button class='btn-green' onclick='addTeam()'>Add Team</button>" +
+      "</div>" +
+      teamRows +
+    "</div>" +
+    "<div class='card'>" +
+      "<h3 class='glow' style='font-size:1.3rem;margin-bottom:1rem'>Select a Category</h3>" +
+      "<div class='cat-grid'>" + catBtns + "</div>" +
+    "</div>";
+}
+
+function questionScreen() {
+  var cat = categories[currentCat];
+  var q = cat.questions[currentQ];
+  var answerHtml = showAnswer
+    ? "<div class='a-box'><strong class='glow'>Answer:</strong><br/>" + q.a + "</div>"
+    : "";
+  var nextLabel = currentQ < cat.questions.length - 1 ? "Next Question" : "Finish Category";
+
+  var scoreCards = teams.map(function(t, i) {
+    var ctrl = editingTeam === i
+      ? "<div class='row' style='justify-content:center;margin-top:.4rem'>" +
+          "<input id='pts-input' type='number' placeholder='Pts' style='width:60px;padding:.3rem;text-align:center;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.4);color:white;border-radius:.5rem;outline:none;font-family:inherit'/>" +
+          "<button class='btn-green' style='padding:.3rem .6rem' onclick='applyScore(" + i + ")'>OK</button>" +
+        "</div>"
+      : "<button class='btn-pink' style='margin-top:.4rem;padding:.3rem .7rem;font-size:.85rem' onclick='startEdit(" + i + ")'>+ Score</button>";
+    return "<div class='score-card'>" +
+      "<div class='glow' style='font-weight:700;font-size:.9rem;margin-bottom:.25rem'>" + t.name + "</div>" +
+      "<div class='score'>" + t.score + "</div>" + ctrl +
+      "</div>";
+  }).join("");
+
+  return "<h1 style='font-size:clamp(1.4rem,3vw,2.2rem)'>" + cat.name + "</h1>" +
+    "<p class='subtitle pink-glow'>Question " + (currentQ+1) + " of " + cat.questions.length + "</p>" +
+    "<div class='card'><div class='q-box'>" + q.q + "</div>" + answerHtml + "</div>" +
+    "<div class='ctrl-row'>" +
+      "<button class='btn-red' onclick='goHome()'>Back to Main</button>" +
+      "<button class='btn-multi' onclick='toggleAnswer()'>" + (showAnswer ? "Hide Answer" : "Reveal Answer") + "</button>" +
+      "<button class='btn-cyan' onclick='nextQ()'>" + nextLabel + "</button>" +
+    "</div>" +
+    "<div class='card'>" +
+      "<h3 class='glow' style='font-size:1.15rem;margin-bottom:.85rem'>Scores</h3>" +
+      "<div class='score-grid'>" + scoreCards + "</div>" +
+    "</div>";
+}
+
+function bindEvents() {
+  var ti = document.getElementById("team-input");
+  if (ti) ti.addEventListener("keypress", function(e){ if(e.key==="Enter") addTeam(); });
+  var pi = document.getElementById("pts-input");
+  if (pi) { pi.focus(); pi.addEventListener("keypress", function(e){ if(e.key==="Enter") applyScore(editingTeam); }); }
+}
+
+function addTeam() {
+  var inp = document.getElementById("team-input");
+  var name = inp ? inp.value.trim() : "";
+  if (name) { teams.push({name: name, score: 0}); render(); }
+}
+function startEdit(i) { editingTeam = i; render(); }
+function cancelEdit() { editingTeam = null; render(); }
+function applyScore(i) {
+  var pi = document.getElementById("pts-input");
+  if (pi) teams[i].score += parseInt(pi.value) || 0;
+  editingTeam = null; render();
+}
+function startCat(i) { currentCat = i; currentQ = 0; showAnswer = false; editingTeam = null; render(); }
+function goHome() { currentCat = null; showAnswer = false; editingTeam = null; render(); }
+function toggleAnswer() { showAnswer = !showAnswer; render(); }
+function nextQ() {
+  if (currentQ < categories[currentCat].questions.length - 1) { currentQ++; showAnswer = false; render(); }
+  else goHome();
+}
+
+render();
 </script>
 </body>
 </html>

@@ -1,109 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Who Wants to Be a Clinician</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', 'Segoe UI', sans-serif; background: linear-gradient(135deg, #0f172a, #064e3b, #134e4a); min-height: 100vh; color: white; }
-  .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
-  h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; text-align: center; margin-bottom: 1rem; text-shadow: 0 0 40px rgba(16,185,129,0.9), 0 2px 10px rgba(0,0,0,0.5); }
-  h1 s { opacity: 0.6; }
-  .subtitle { text-align: center; font-size: 1.2rem; color: #6ee7b7; margin-bottom: 2rem; }
-  .card { background: rgba(255,255,255,0.08); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 0 40px rgba(16,185,129,0.3); }
-  .card h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 1.2rem; text-shadow: 0 0 20px rgba(16,185,129,0.8); display: flex; align-items: center; gap: 0.5rem; }
-  input[type=text], input[type=number] { background: rgba(255,255,255,0.05); border: 1px solid rgba(52,211,153,0.4); border-radius: 0.75rem; padding: 0.75rem 1rem; color: white; font-size: 1rem; outline: none; }
-  input[type=text]::placeholder { color: rgba(110,231,183,0.5); }
-  input[type=text]:focus, input[type=number]:focus { border-color: rgba(52,211,153,0.7); box-shadow: 0 0 15px rgba(16,185,129,0.3); }
-  .btn { border: none; border-radius: 0.75rem; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-  .btn:hover { transform: scale(1.05); }
-  .btn-green { background: linear-gradient(135deg, #10b981, #0d9488); color: white; box-shadow: 0 0 20px rgba(16,185,129,0.4); }
-  .btn-pink { background: linear-gradient(135deg, #ec4899, #a855f7); color: white; box-shadow: 0 0 20px rgba(236,72,153,0.4); }
-  .btn-red { background: linear-gradient(135deg, #ef4444, #ec4899); color: white; box-shadow: 0 0 20px rgba(239,68,68,0.4); }
-  .btn-cyan { background: linear-gradient(135deg, #10b981, #06b6d4); color: white; box-shadow: 0 0 20px rgba(6,182,212,0.4); }
-  .team-row { background: rgba(255,255,255,0.05); border: 1px solid rgba(52,211,153,0.3); border-radius: 0.75rem; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
-  .team-name { font-size: 1.2rem; font-weight: 700; text-shadow: 0 0 15px rgba(16,185,129,0.7); }
-  .team-score { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, #6ee7b7, #f9a8d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .team-actions { display: flex; align-items: center; gap: 0.5rem; }
-  .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-  .cat-btn { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(236,72,153,0.2)); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s; color: white; text-align: center; width: 100%; }
-  .cat-btn:hover { transform: scale(1.04); background: linear-gradient(135deg, rgba(16,185,129,0.45), rgba(236,72,153,0.3)); }
-  .cat-btn .cat-name { font-size: 1.4rem; font-weight: 900; text-shadow: 0 0 20px rgba(16,185,129,0.9); }
-  .cat-btn .cat-count { font-size: 1rem; color: #f9a8d4; margin-top: 0.5rem; text-shadow: 0 0 10px rgba(236,72,153,0.6); }
-  .question-box { background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(236,72,153,0.15)); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 2rem; margin-bottom: 1.5rem; }
-  .question-text { font-size: 1.6rem; font-weight: 700; text-align: center; white-space: pre-line; line-height: 1.5; text-shadow: 0 0 20px rgba(16,185,129,0.7), 0 2px 8px rgba(0,0,0,0.8); }
-  .answer-box { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(6,182,212,0.2)); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 1.5rem; margin-top: 1rem; }
-  .answer-label { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; text-shadow: 0 0 15px rgba(16,185,129,0.9); }
-  .answer-text { font-size: 1.3rem; font-weight: 700; line-height: 1.5; text-shadow: 0 0 15px rgba(16,185,129,0.6); }
-  .controls { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-bottom: 1.5rem; }
-  .q-img { max-width: 420px; width: 100%; border-radius: 1rem; border: 1px solid rgba(52,211,153,0.4); box-shadow: 0 0 30px rgba(16,185,129,0.4); display: block; margin: 1rem auto; }
-  .scoreboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
-  .score-tile { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(236,72,153,0.2)); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 1.2rem; text-align: center; }
-  .score-tile .sname { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; text-shadow: 0 0 15px rgba(16,185,129,0.7); }
-  .score-tile .sval { font-size: 3rem; font-weight: 900; text-shadow: 0 0 30px rgba(236,72,153,0.9), 0 0 15px rgba(16,185,129,0.6); }
-  .hidden { display: none; }
-  .flex { display: flex; gap: 0.75rem; align-items: center; }
-  .trophy { color: #facc15; filter: drop-shadow(0 0 8px rgba(250,204,21,0.6)); }
-  #q-counter { text-align: center; font-size: 1.2rem; color: #f9a8d4; margin-bottom: 0.5rem; text-shadow: 0 0 15px rgba(236,72,153,0.7); }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Who Wants to Be a Clinician</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body { margin: 0; font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif; }
+    .glow-green { text-shadow: 0 0 30px rgba(16,185,129,0.9), 0 2px 8px rgba(0,0,0,0.5); }
+    .glow-pink  { text-shadow: 0 0 30px rgba(236,72,153,0.8), 0 2px 6px rgba(0,0,0,0.5); }
+    .card-glow  { box-shadow: 0 0 60px rgba(16,185,129,0.4), inset 0 0 60px rgba(16,185,129,0.15); }
+    .btn-glow-green { box-shadow: 0 0 30px rgba(16,185,129,0.5); }
+    .btn-glow-pink  { box-shadow: 0 0 30px rgba(236,72,153,0.5); }
+    .btn-glow-red   { box-shadow: 0 0 30px rgba(239,68,68,0.4); }
+    .score-glow { text-shadow: 0 0 40px rgba(236,72,153,0.9), 0 0 20px rgba(16,185,129,0.6), 0 2px 10px rgba(0,0,0,0.5); }
+  </style>
 </head>
 <body>
-<div class="container">
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
 
-  <!-- MAIN SCREEN -->
-  <div id="screen-main">
-    <h1>WHO WANTS TO BE A <s>MILLIONAIRE</s> CLINICIAN! 💉</h1>
-
-    <!-- Team Setup -->
-    <div class="card">
-      <h2>👥 Team Setup</h2>
-      <div class="flex" style="margin-bottom:1rem;">
-        <input type="text" id="team-input" placeholder="Enter team name..." style="flex:1;" onkeypress="if(event.key==='Enter')addTeam()">
-        <button class="btn btn-green" onclick="addTeam()">Add Team</button>
-      </div>
-      <div id="team-list"></div>
-    </div>
-
-    <!-- Category Selection -->
-    <div class="card">
-      <h2>🎯 Select Category</h2>
-      <div class="categories" id="cat-grid"></div>
-    </div>
-  </div>
-
-  <!-- QUESTION SCREEN -->
-  <div id="screen-question" class="hidden">
-    <h1 id="q-cat-title" style="font-size:2.2rem; margin-bottom:0.5rem;"></h1>
-    <p id="q-counter"></p>
-
-    <div class="card">
-      <div class="question-box">
-        <p class="question-text" id="q-text"></p>
-        <img id="q-img" class="q-img hidden" src="" alt="Question image">
-        <div id="answer-box" class="answer-box hidden">
-          <p class="answer-label">✅ Answer:</p>
-          <p class="answer-text" id="a-text"></p>
-        </div>
-      </div>
-
-      <div class="controls">
-        <button class="btn btn-red" onclick="goMain()">← Back to Main</button>
-        <button class="btn btn-pink" onclick="toggleAnswer()">Reveal Answer</button>
-        <button class="btn btn-cyan" onclick="nextQuestion()">Next Question →</button>
-      </div>
-    </div>
-
-    <!-- Live Scores -->
-    <div class="card">
-      <h2>🏆 Current Scores</h2>
-      <div class="scoreboard" id="live-scores"></div>
-    </div>
-  </div>
-
-</div>
-
-<script>
 const categories = [
   {
     name: "TamVegas",
@@ -139,8 +59,8 @@ const categories = [
     name: "Pop Culture",
     questions: [
       { q: "Who played Kath and Kim in the Australian series of the same name?", a: "Jane Turner and Gina Riley" },
-      { q: "Who wore the famous dress before Kim Kardashian?", a: "Marilyn Monroe", image: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/KimK.jpg" },
-      { q: "Name this artist", a: "Dom Dolla", image: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/domdolla.jpg" },
+      { q: "Who wore the famous dress before Kim Kardashian? (Show image if you have it)", a: "Marilyn Monroe" },
+      { q: "Name this artist (Show image if you have it)", a: "Dom Dolla" },
       { q: "Which breakfast TV personality was in a band called 'Wilde and Reckless'?\n\na) David Koch\nb) Richard Wilkins\nc) Karl Stefanovic\nd) Peter Stefanovic", a: "b) Richard Wilkins" },
       { q: "Season 3 of The White Lotus took place in which country?", a: "Thailand" },
       { q: "What are the names of Taylor Swift's cats?", a: "Meredith Grey, Olivia Benson & Benjamin Button" },
@@ -162,160 +82,245 @@ const categories = [
       { q: "What is the symbol for the chemical element Potassium? Bonus: What is Potassium's atomic number?", a: "K. Atomic number: 19" },
       { q: "Which comedy show celebrated its 50th anniversary in 2025?", a: "Saturday Night Live" },
       { q: "What is pogonophobia a fear of?", a: "Beards" },
-      { q: "What was this item used for?", a: "Coffee Grinder", image: "https://share.google/1GsAcJtUoo6cT7guM" }
+      { q: "What was this item used for? (Show image if you have it)", a: "Coffee Grinder" }
     ]
   },
   {
-    name: "Paper Airplane Comp",
+    name: "✈️ Paper Airplane",
     questions: [
       { q: "🛩️ Paper Airplane Challenge!\n\nEach team creates and flies one paper airplane.\n\nWhich team's airplane will fly the farthest?", a: "Winner determined by flight distance!" }
     ]
   },
   {
-    name: "Bonus Points",
+    name: "🏆 Bonus Points",
     questions: [
-      { q: "📸 The Caption Game\n\n\n\nTeams submit a caption.\n\nHost chooses the funniest = bonus points!", a: "Funniest caption wins!" image: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/theoffice.jpg" },
+      { q: "📸 The Caption Game\n\nA photo will be shown.\n\nTeams submit a caption.\n\nHost chooses the funniest = bonus points!", a: "Funniest caption wins!" },
       { q: "🔍 Zoomed In Chaos #1\n\nA zoomed-in photo will be shown.\n\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!" },
       { q: "🔍 Zoomed In Chaos #2\n\nAnother zoomed-in photo will be shown.\n\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!" },
-      { q: "🧍➡️🧍 Line Up Challenge\n\nTeams must line themselves up WITHOUT TALKING based on:\n\nHEIGHT (shortest to tallest)\n\nFirst team to correctly line up wins!", a: "Fastest correct lineup wins bonus points!" },
-      { q: "🏆 Human-Sized Paper Scissors Rock Tournament\n\nEach team sends 1 person.\n\nSingle elimination bracket.\n\nWinner scores bonus points for their team. ✊✋✌️", a: "Tournament winner's team gets bonus points!" }
+      { q: "🧍 Line Up Challenge\n\nTeams must line themselves up WITHOUT TALKING based on HEIGHT (shortest to tallest).\n\nFirst team to correctly line up wins!", a: "Fastest correct lineup wins bonus points!" },
+      { q: "✊✋✌️ Human-Sized Paper Scissors Rock Tournament\n\nEach team sends 1 person.\n\nSingle elimination bracket.\n\nWinner scores bonus points for their team!", a: "Tournament winner's team gets bonus points!" }
     ]
   }
 ];
 
-let teams = [];
-let currentCat = null;
-let currentQ = 0;
-let answerVisible = false;
-let editingIdx = null;
+function App() {
+  const [teams, setTeams] = useState([]);
+  const [newTeamName, setNewTeamName] = useState('');
+  const [currentCategory, setCurrentCategory] = useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [editingTeam, setEditingTeam] = useState(null);
+  const [pointsToAdd, setPointsToAdd] = useState('');
 
-function addTeam() {
-  const inp = document.getElementById('team-input');
-  const name = inp.value.trim();
-  if (!name) return;
-  teams.push({ name, score: 0 });
-  inp.value = '';
-  renderTeams();
+  const addTeam = () => {
+    if (newTeamName.trim()) {
+      setTeams([...teams, { name: newTeamName.trim(), score: 0 }]);
+      setNewTeamName('');
+    }
+  };
+
+  const updateScore = (idx, pts) => {
+    const t = [...teams];
+    t[idx].score += parseInt(pts) || 0;
+    setTeams(t);
+    setEditingTeam(null);
+    setPointsToAdd('');
+  };
+
+  const startCategory = (i) => {
+    setCurrentCategory(i);
+    setCurrentQuestion(0);
+    setShowAnswer(false);
+    setGameStarted(true);
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestion < categories[currentCategory].questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setShowAnswer(false);
+    } else {
+      setCurrentCategory(null);
+      setGameStarted(false);
+    }
+  };
+
+  const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
+
+  if (!gameStarted) return (
+    <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #0f172a, #064e3b, #134e4a)', padding:'2rem'}}>
+      <div style={{maxWidth:'900px', margin:'0 auto'}}>
+
+        {/* Title */}
+        <div style={{textAlign:'center', marginBottom:'2.5rem'}}>
+          <h1 style={{fontSize:'clamp(2rem,5vw,4rem)', fontWeight:900, color:'white', lineHeight:1.1,
+            textShadow:'0 0 60px rgba(16,185,129,0.9), 0 0 30px rgba(236,72,153,0.4), 0 4px 20px rgba(0,0,0,0.5)'}}>
+            WHO WANTS TO BE A <span style={{textDecoration:'line-through'}}>MILLIONAIRE</span>{' '}
+            <span style={{textDecoration:'underline'}}>CLINICIAN</span>! 💉
+          </h1>
+        </div>
+
+        {/* Team Setup */}
+        <div style={{background:'rgba(255,255,255,0.08)', border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'2rem', marginBottom:'1.5rem'}} className="card-glow">
+          <h3 style={{color:'white', fontSize:'1.5rem', fontWeight:800, marginBottom:'1rem'}} className="glow-green">👥 Team Setup</h3>
+          <div style={{display:'flex', gap:'0.75rem', marginBottom:'1rem'}}>
+            <input
+              type="text" value={newTeamName}
+              onChange={e => setNewTeamName(e.target.value)}
+              onKeyPress={e => e.key === 'Enter' && addTeam()}
+              placeholder="Enter team name..."
+              style={{flex:1, padding:'0.75rem 1rem', borderRadius:'0.75rem', background:'rgba(255,255,255,0.05)',
+                border:'1px solid rgba(16,185,129,0.4)', color:'white', fontSize:'1rem', outline:'none'}}
+            />
+            <button onClick={addTeam}
+              style={{padding:'0.75rem 1.5rem', background:'linear-gradient(135deg,#10b981,#0d9488)', color:'white',
+                border:'none', borderRadius:'0.75rem', fontWeight:700, cursor:'pointer', fontSize:'1rem'}}
+              className="btn-glow-green">
+              Add Team
+            </button>
+          </div>
+
+          {sortedTeams.map((team, i) => {
+            const realIdx = teams.indexOf(team);
+            return (
+              <div key={i} style={{display:'flex', justifyContent:'space-between', alignItems:'center',
+                background:'rgba(255,255,255,0.05)', border:'1px solid rgba(16,185,129,0.3)',
+                borderRadius:'0.75rem', padding:'1rem 1.25rem', marginBottom:'0.5rem'}}>
+                <span style={{color:'white', fontWeight:700, fontSize:'1.1rem'}} className="glow-green">
+                  {i === 0 && '🏆 '}{team.name}
+                </span>
+                <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
+                  <span style={{fontSize:'2rem', fontWeight:900, color:'white'}} className="score-glow">{team.score}</span>
+                  {editingTeam === realIdx ? (
+                    <div style={{display:'flex', gap:'0.5rem'}}>
+                      <input type="number" value={pointsToAdd} onChange={e => setPointsToAdd(e.target.value)}
+                        placeholder="Pts" style={{width:'70px', padding:'0.5rem', borderRadius:'0.5rem',
+                          background:'rgba(255,255,255,0.05)', border:'1px solid rgba(16,185,129,0.4)',
+                          color:'white', textAlign:'center', outline:'none'}} />
+                      <button onClick={() => updateScore(realIdx, pointsToAdd)}
+                        style={{padding:'0.5rem 0.75rem', background:'linear-gradient(135deg,#22c55e,#10b981)',
+                          border:'none', borderRadius:'0.5rem', color:'white', fontWeight:700, cursor:'pointer'}}>✓</button>
+                    </div>
+                  ) : (
+                    <button onClick={() => setEditingTeam(realIdx)}
+                      style={{padding:'0.5rem 0.75rem', background:'linear-gradient(135deg,#ec4899,#a855f7)',
+                        border:'none', borderRadius:'0.5rem', color:'white', fontWeight:700, cursor:'pointer', fontSize:'1rem'}}
+                      className="btn-glow-pink">+</button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Category Grid */}
+        <div style={{background:'rgba(255,255,255,0.08)', border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'2rem'}} className="card-glow">
+          <h3 style={{color:'white', fontSize:'1.5rem', fontWeight:800, marginBottom:'1.25rem'}} className="glow-green">Select Category</h3>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(250px,1fr))', gap:'1rem'}}>
+            {categories.map((cat, i) => (
+              <button key={i} onClick={() => startCategory(i)}
+                style={{padding:'1.5rem', background:'linear-gradient(135deg,rgba(16,185,129,0.25),rgba(236,72,153,0.15))',
+                  border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', color:'white', cursor:'pointer',
+                  transition:'transform 0.15s', fontFamily:'inherit'}}
+                onMouseEnter={e => e.currentTarget.style.transform='scale(1.04)'}
+                onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
+                <div style={{fontSize:'1.3rem', fontWeight:900}} className="glow-green">{cat.name}</div>
+                <div style={{fontSize:'0.95rem', marginTop:'0.4rem', color:'rgba(255,255,255,0.7)'}}>{cat.questions.length} Questions</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const q = categories[currentCategory].questions[currentQuestion];
+
+  return (
+    <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #0f172a, #064e3b, #134e4a)', padding:'2rem'}}>
+      <div style={{maxWidth:'900px', margin:'0 auto'}}>
+
+        {/* Header */}
+        <div style={{textAlign:'center', marginBottom:'1.5rem'}}>
+          <h1 style={{fontSize:'2.5rem', fontWeight:900, color:'white', marginBottom:'0.25rem'}} className="glow-green">
+            {categories[currentCategory].name}
+          </h1>
+          <div style={{color:'white', fontSize:'1.2rem', fontWeight:700}} className="glow-pink">
+            Question {currentQuestion + 1} of {categories[currentCategory].questions.length}
+          </div>
+        </div>
+
+        {/* Question Card */}
+        <div style={{background:'rgba(255,255,255,0.08)', border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'2rem', marginBottom:'1.25rem'}} className="card-glow">
+          <div style={{background:'linear-gradient(135deg,rgba(16,185,129,0.25),rgba(236,72,153,0.15))',
+            border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'2rem', marginBottom:'1.25rem'}}>
+            <p style={{color:'white', fontSize:'1.5rem', fontWeight:700, textAlign:'center', whiteSpace:'pre-line', lineHeight:1.6}} className="glow-green">
+              {q.q}
+            </p>
+          </div>
+
+          {showAnswer && (
+            <div style={{background:'linear-gradient(135deg,rgba(16,185,129,0.25),rgba(6,182,212,0.15))',
+              border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'1.5rem'}}>
+              <p style={{color:'white', fontWeight:900, fontSize:'1.1rem', marginBottom:'0.5rem'}} className="glow-green">Answer:</p>
+              <p style={{color:'white', fontSize:'1.2rem', fontWeight:700, lineHeight:1.6}} className="glow-green">{q.a}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Controls */}
+        <div style={{display:'flex', flexWrap:'wrap', gap:'0.75rem', justifyContent:'center', marginBottom:'1.5rem'}}>
+          <button onClick={() => { setCurrentCategory(null); setGameStarted(false); }}
+            style={{padding:'0.75rem 1.5rem', background:'linear-gradient(135deg,#ef4444,#ec4899)',
+              border:'none', borderRadius:'0.75rem', color:'white', fontWeight:700, cursor:'pointer', fontSize:'1rem', fontFamily:'inherit'}}
+            className="btn-glow-red">← Back to Main</button>
+          <button onClick={() => setShowAnswer(!showAnswer)}
+            style={{padding:'0.75rem 1.5rem', background:'linear-gradient(135deg,#10b981,#ec4899)',
+              border:'none', borderRadius:'0.75rem', color:'white', fontWeight:700, cursor:'pointer', fontSize:'1rem', fontFamily:'inherit'}}
+            className="btn-glow-green">{showAnswer ? 'Hide Answer' : 'Reveal Answer'}</button>
+          <button onClick={nextQuestion}
+            style={{padding:'0.75rem 1.5rem', background:'linear-gradient(135deg,#10b981,#06b6d4)',
+              border:'none', borderRadius:'0.75rem', color:'white', fontWeight:700, cursor:'pointer', fontSize:'1rem', fontFamily:'inherit'}}
+            className="btn-glow-green">
+            {currentQuestion < categories[currentCategory].questions.length - 1 ? 'Next Question →' : 'Finish Category ✓'}
+          </button>
+        </div>
+
+        {/* Scoreboard */}
+        <div style={{background:'rgba(255,255,255,0.08)', border:'1px solid rgba(16,185,129,0.4)', borderRadius:'1rem', padding:'1.5rem'}} className="card-glow">
+          <h3 style={{color:'white', fontSize:'1.25rem', fontWeight:800, marginBottom:'1rem'}} className="glow-green">🏅 Current Scores</h3>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(140px,1fr))', gap:'0.75rem'}}>
+            {teams.map((team, i) => (
+              <div key={i} style={{background:'linear-gradient(135deg,rgba(16,185,129,0.25),rgba(236,72,153,0.15))',
+                border:'1px solid rgba(16,185,129,0.4)', borderRadius:'0.75rem', padding:'1rem', textAlign:'center'}}>
+                <div style={{color:'white', fontWeight:700, marginBottom:'0.25rem', fontSize:'0.95rem'}} className="glow-green">{team.name}</div>
+                <div style={{fontSize:'2.5rem', fontWeight:900, color:'white'}} className="score-glow">{team.score}</div>
+                {editingTeam === i ? (
+                  <div style={{display:'flex', gap:'0.4rem', marginTop:'0.5rem', justifyContent:'center'}}>
+                    <input type="number" value={pointsToAdd} onChange={e => setPointsToAdd(e.target.value)}
+                      placeholder="Pts" style={{width:'55px', padding:'0.3rem', borderRadius:'0.4rem',
+                        background:'rgba(255,255,255,0.05)', border:'1px solid rgba(16,185,129,0.4)',
+                        color:'white', textAlign:'center', outline:'none', fontFamily:'inherit'}} />
+                    <button onClick={() => updateScore(i, pointsToAdd)}
+                      style={{padding:'0.3rem 0.6rem', background:'#22c55e', border:'none',
+                        borderRadius:'0.4rem', color:'white', fontWeight:700, cursor:'pointer'}}>✓</button>
+                  </div>
+                ) : (
+                  <button onClick={() => setEditingTeam(i)}
+                    style={{marginTop:'0.5rem', padding:'0.3rem 0.75rem', background:'linear-gradient(135deg,#ec4899,#a855f7)',
+                      border:'none', borderRadius:'0.5rem', color:'white', fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
+                    className="btn-glow-pink">+ Score</button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function renderTeams() {
-  const list = document.getElementById('team-list');
-  list.innerHTML = '';
-  const sorted = [...teams].sort((a,b) => b.score - a.score);
-  sorted.forEach(team => {
-    const idx = teams.indexOf(team);
-    const row = document.createElement('div');
-    row.className = 'team-row';
-    const trophy = idx === teams.indexOf(sorted[0]) ? '<span class="trophy">🏆</span>' : '';
-    row.innerHTML = `
-      <div class="team-name">${trophy} ${team.name}</div>
-      <div class="team-actions">
-        <span class="team-score">${team.score}</span>
-        ${editingIdx === idx
-          ? `<input type="number" id="pts-${idx}" placeholder="pts" style="width:80px;">
-             <button class="btn btn-green" onclick="applyPoints(${idx})">✓</button>`
-          : `<button class="btn btn-pink" onclick="startEdit(${idx})">＋</button>`
-        }
-      </div>`;
-    list.appendChild(row);
-  });
-}
-
-function startEdit(idx) {
-  editingIdx = idx;
-  renderTeams();
-  const inp = document.getElementById(`pts-${idx}`);
-  if (inp) inp.focus();
-}
-
-function applyPoints(idx) {
-  const inp = document.getElementById(`pts-${idx}`);
-  const pts = parseInt(inp ? inp.value : 0) || 0;
-  teams[idx].score += pts;
-  editingIdx = null;
-  renderTeams();
-  renderLiveScores();
-}
-
-function buildCatGrid() {
-  const grid = document.getElementById('cat-grid');
-  grid.innerHTML = '';
-  categories.forEach((cat, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'cat-btn';
-    btn.innerHTML = `<div class="cat-name">${cat.name}</div><div class="cat-count">${cat.questions.length} Question${cat.questions.length > 1 ? 's' : ''}</div>`;
-    btn.onclick = () => startCategory(i);
-    grid.appendChild(btn);
-  });
-}
-
-function startCategory(idx) {
-  currentCat = idx;
-  currentQ = 0;
-  answerVisible = false;
-  document.getElementById('screen-main').classList.add('hidden');
-  document.getElementById('screen-question').classList.remove('hidden');
-  renderQuestion();
-}
-
-function renderQuestion() {
-  const cat = categories[currentCat];
-  const q = cat.questions[currentQ];
-  document.getElementById('q-cat-title').textContent = cat.name;
-  document.getElementById('q-counter').textContent = `Question ${currentQ + 1} of ${cat.questions.length}`;
-  document.getElementById('q-text').textContent = q.q;
-  document.getElementById('a-text').textContent = q.a;
-  document.getElementById('answer-box').classList.add('hidden');
-  answerVisible = false;
-  document.querySelector('.btn-pink').textContent = 'Reveal Answer';
-
-  const img = document.getElementById('q-img');
-  if (q.image) {
-    img.src = q.image;
-    img.classList.remove('hidden');
-  } else {
-    img.src = '';
-    img.classList.add('hidden');
-  }
-
-  renderLiveScores();
-}
-
-function toggleAnswer() {
-  answerVisible = !answerVisible;
-  document.getElementById('answer-box').classList.toggle('hidden', !answerVisible);
-  document.querySelector('.btn-pink').textContent = answerVisible ? 'Hide Answer' : 'Reveal Answer';
-}
-
-function nextQuestion() {
-  if (currentQ < categories[currentCat].questions.length - 1) {
-    currentQ++;
-    renderQuestion();
-  } else {
-    goMain();
-  }
-}
-
-function goMain() {
-  currentCat = null;
-  document.getElementById('screen-question').classList.add('hidden');
-  document.getElementById('screen-main').classList.remove('hidden');
-  renderTeams();
-}
-
-function renderLiveScores() {
-  const sb = document.getElementById('live-scores');
-  if (!sb) return;
-  sb.innerHTML = '';
-  teams.forEach(t => {
-    const tile = document.createElement('div');
-    tile.className = 'score-tile';
-    tile.innerHTML = `<div class="sname">${t.name}</div><div class="sval">${t.score}</div>`;
-    sb.appendChild(tile);
-  });
-}
-
-buildCatGrid();
+ReactDOM.render(<App />, document.getElementById('root'));
 </script>
 </body>
 </html>

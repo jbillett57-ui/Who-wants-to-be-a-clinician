@@ -27,6 +27,7 @@
     .cat-btn{padding:1.4rem;background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;color:white;font-size:1.15rem;font-weight:900;text-shadow:0 0 20px rgba(16,185,129,0.8);text-align:center}
     .cat-sub{font-size:.85rem;font-weight:500;margin-top:.3rem;color:rgba(255,255,255,0.6);text-shadow:none}
     .q-box{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;padding:1.75rem;margin-bottom:1rem;font-size:1.35rem;font-weight:700;white-space:pre-line;line-height:1.6;text-shadow:0 0 20px rgba(16,185,129,0.7)}
+    .q-img{display:block;max-width:420px;width:100%;border-radius:1rem;margin:1rem auto 0;border:2px solid rgba(16,185,129,0.4);box-shadow:0 0 30px rgba(16,185,129,0.3)}
     .a-box{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(6,182,212,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;padding:1.5rem;font-size:1.2rem;line-height:1.6}
     .score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem}
     .score-card{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:.75rem;padding:1rem;text-align:center}
@@ -72,8 +73,8 @@ var categories = [
     name: "Pop Culture",
     questions: [
       {q: "Who played Kath and Kim in the Australian series of the same name?", a: "Jane Turner and Gina Riley"},
-      {q: "Who wore the famous dress before Kim Kardashian?", a: "Marilyn Monroe"},
-      {q: "Name this artist — show image to teams", a: "Dom Dolla"},
+      {q: "Who wore the famous dress before Kim Kardashian?", a: "Marilyn Monroe", img: "images/marilyn-dress.jpg"},
+      {q: "Name this artist", a: "Dom Dolla", img: "images/dom-dolla.jpg"},
       {q: "Which breakfast TV personality was in a band called Wilde and Reckless?\n\na) David Koch\nb) Richard Wilkins\nc) Karl Stefanovic\nd) Peter Stefanovic", a: "b) Richard Wilkins"},
       {q: "Season 3 of The White Lotus took place in which country?", a: "Thailand"},
       {q: "What are the names of Taylor Swift's cats?", a: "Meredith Grey, Olivia Benson and Benjamin Button"},
@@ -95,7 +96,7 @@ var categories = [
       {q: "What is the symbol for the chemical element Potassium?\nBonus: What is Potassium's atomic number?", a: "K. Atomic number: 19"},
       {q: "Which comedy show celebrated its 50th anniversary in 2025?", a: "Saturday Night Live"},
       {q: "What is pogonophobia a fear of?", a: "Beards"},
-      {q: "What was this item used for? — show image to teams", a: "Coffee Grinder"}
+      {q: "What was this item used for?", a: "Coffee Grinder", img: "images/coffee-grinder.jpg"}
     ]
   },
   {
@@ -107,9 +108,9 @@ var categories = [
   {
     name: "Bonus Points",
     questions: [
-      {q: "The Caption Game\n\nA photo will be shown. Teams submit a caption.\nHost chooses the funniest = bonus points!", a: "Funniest caption wins!"},
-      {q: "Zoomed In Chaos #1\n\nA zoomed-in photo will be shown.\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!"},
-      {q: "Zoomed In Chaos #2\n\nAnother zoomed-in photo will be shown.\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!"},
+      {q: "The Caption Game\n\nTeams submit a caption for the image below.\nHost chooses the funniest = bonus points!", a: "Funniest caption wins!", img: "images/caption-game.jpg"},
+      {q: "Zoomed In Chaos #1\n\nWho is this?", a: "Correct guess wins bonus points!", img: "images/zoomed-1.jpg"},
+      {q: "Zoomed In Chaos #2\n\nWho is this?", a: "Correct guess wins bonus points!", img: "images/zoomed-2.jpg"},
       {q: "Line Up Challenge\n\nTeams must line up WITHOUT TALKING\nbased on HEIGHT (shortest to tallest).\n\nFirst correct team wins!", a: "Fastest correct lineup wins bonus points!"},
       {q: "Human Paper Scissors Rock\n\nEach team sends 1 person.\nSingle elimination bracket.\nWinner scores bonus points for their team!", a: "Tournament winner gets bonus points!"}
     ]
@@ -165,6 +166,7 @@ function mainScreen() {
 function questionScreen() {
   var cat = categories[currentCat];
   var q = cat.questions[currentQ];
+  var imgHtml = q.img ? "<img class='q-img' src='" + q.img + "' alt='Question image'/>" : "";
   var answerHtml = showAnswer
     ? "<div class='a-box'><strong class='glow'>Answer:</strong><br/>" + q.a + "</div>"
     : "";
@@ -185,7 +187,7 @@ function questionScreen() {
 
   return "<h1 style='font-size:clamp(1.4rem,3vw,2.2rem)'>" + cat.name + "</h1>" +
     "<p class='subtitle pink-glow'>Question " + (currentQ+1) + " of " + cat.questions.length + "</p>" +
-    "<div class='card'><div class='q-box'>" + q.q + "</div>" + answerHtml + "</div>" +
+    "<div class='card'><div class='q-box'>" + q.q + imgHtml + "</div>" + answerHtml + "</div>" +
     "<div class='ctrl-row'>" +
       "<button class='btn-red' onclick='goHome()'>Back to Main</button>" +
       "<button class='btn-multi' onclick='toggleAnswer()'>" + (showAnswer ? "Hide Answer" : "Reveal Answer") + "</button>" +

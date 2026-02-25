@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who Wants to Be a Clinician</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Segoe UI', sans-serif; background: linear-gradient(135deg, #0f172a, #064e3b, #134e4a); min-height: 100vh; color: white; }
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+  h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; text-align: center; margin-bottom: 1rem; text-shadow: 0 0 40px rgba(16,185,129,0.9), 0 2px 10px rgba(0,0,0,0.5); }
+  h1 s { opacity: 0.6; }
+  .subtitle { text-align: center; font-size: 1.2rem; color: #6ee7b7; margin-bottom: 2rem; }
+  .card { background: rgba(255,255,255,0.08); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 0 40px rgba(16,185,129,0.3); }
+  .card h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 1.2rem; text-shadow: 0 0 20px rgba(16,185,129,0.8); display: flex; align-items: center; gap: 0.5rem; }
+  input[type=text], input[type=number] { background: rgba(255,255,255,0.05); border: 1px solid rgba(52,211,153,0.4); border-radius: 0.75rem; padding: 0.75rem 1rem; color: white; font-size: 1rem; outline: none; }
+  input[type=text]::placeholder { color: rgba(110,231,183,0.5); }
+  input[type=text]:focus, input[type=number]:focus { border-color: rgba(52,211,153,0.7); box-shadow: 0 0 15px rgba(16,185,129,0.3); }
+  .btn { border: none; border-radius: 0.75rem; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn:hover { transform: scale(1.05); }
+  .btn-green { background: linear-gradient(135deg, #10b981, #0d9488); color: white; box-shadow: 0 0 20px rgba(16,185,129,0.4); }
+  .btn-pink { background: linear-gradient(135deg, #ec4899, #a855f7); color: white; box-shadow: 0 0 20px rgba(236,72,153,0.4); }
+  .btn-red { background: linear-gradient(135deg, #ef4444, #ec4899); color: white; box-shadow: 0 0 20px rgba(239,68,68,0.4); }
+  .btn-cyan { background: linear-gradient(135deg, #10b981, #06b6d4); color: white; box-shadow: 0 0 20px rgba(6,182,212,0.4); }
+  .team-row { background: rgba(255,255,255,0.05); border: 1px solid rgba(52,211,153,0.3); border-radius: 0.75rem; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .team-name { font-size: 1.2rem; font-weight: 700; text-shadow: 0 0 15px rgba(16,185,129,0.7); }
+  .team-score { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, #6ee7b7, #f9a8d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .team-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+  .cat-btn { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(236,72,153,0.2)); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s; color: white; text-align: center; width: 100%; }
+  .cat-btn:hover { transform: scale(1.04); background: linear-gradient(135deg, rgba(16,185,129,0.45), rgba(236,72,153,0.3)); }
+  .cat-btn .cat-name { font-size: 1.4rem; font-weight: 900; text-shadow: 0 0 20px rgba(16,185,129,0.9); }
+  .cat-btn .cat-count { font-size: 1rem; color: #f9a8d4; margin-top: 0.5rem; text-shadow: 0 0 10px rgba(236,72,153,0.6); }
+  .question-box { background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(236,72,153,0.15)); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 2rem; margin-bottom: 1.5rem; }
+  .question-text { font-size: 1.6rem; font-weight: 700; text-align: center; white-space: pre-line; line-height: 1.5; text-shadow: 0 0 20px rgba(16,185,129,0.7), 0 2px 8px rgba(0,0,0,0.8); }
+  .answer-box { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(6,182,212,0.2)); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 1.5rem; margin-top: 1rem; }
+  .answer-label { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; text-shadow: 0 0 15px rgba(16,185,129,0.9); }
+  .answer-text { font-size: 1.3rem; font-weight: 700; line-height: 1.5; text-shadow: 0 0 15px rgba(16,185,129,0.6); }
+  .controls { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-bottom: 1.5rem; }
+  .q-img { max-width: 420px; width: 100%; border-radius: 1rem; border: 1px solid rgba(52,211,153,0.4); box-shadow: 0 0 30px rgba(16,185,129,0.4); display: block; margin: 1rem auto; }
+  .scoreboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+  .score-tile { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(236,72,153,0.2)); border: 1px solid rgba(52,211,153,0.4); border-radius: 1rem; padding: 1.2rem; text-align: center; }
+  .score-tile .sname { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; text-shadow: 0 0 15px rgba(16,185,129,0.7); }
+  .score-tile .sval { font-size: 3rem; font-weight: 900; text-shadow: 0 0 30px rgba(236,72,153,0.9), 0 0 15px rgba(16,185,129,0.6); }
+  .hidden { display: none; }
+  .flex { display: flex; gap: 0.75rem; align-items: center; }
+  .trophy { color: #facc15; filter: drop-shadow(0 0 8px rgba(250,204,21,0.6)); }
+  #q-counter { text-align: center; font-size: 1.2rem; color: #f9a8d4; margin-bottom: 0.5rem; text-shadow: 0 0 15px rgba(236,72,153,0.7); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- MAIN SCREEN -->
+  <div id="screen-main">
+    <h1>WHO WANTS TO BE A <s>MILLIONAIRE</s> CLINICIAN! 💉</h1>
+
+    <!-- Team Setup -->
+    <div class="card">
+      <h2>👥 Team Setup</h2>
+      <div class="flex" style="margin-bottom:1rem;">
+        <input type="text" id="team-input" placeholder="Enter team name..." style="flex:1;" onkeypress="if(event.key==='Enter')addTeam()">
+        <button class="btn btn-green" onclick="addTeam()">Add Team</button>
+      </div>
+      <div id="team-list"></div>
+    </div>
+
+    <!-- Category Selection -->
+    <div class="card">
+      <h2>🎯 Select Category</h2>
+      <div class="categories" id="cat-grid"></div>
+    </div>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div id="screen-question" class="hidden">
+    <h1 id="q-cat-title" style="font-size:2.2rem; margin-bottom:0.5rem;"></h1>
+    <p id="q-counter"></p>
+
+    <div class="card">
+      <div class="question-box">
+        <p class="question-text" id="q-text"></p>
+        <img id="q-img" class="q-img hidden" src="" alt="Question image">
+        <div id="answer-box" class="answer-box hidden">
+          <p class="answer-label">✅ Answer:</p>
+          <p class="answer-text" id="a-text"></p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-red" onclick="goMain()">← Back to Main</button>
+        <button class="btn btn-pink" onclick="toggleAnswer()">Reveal Answer</button>
+        <button class="btn btn-cyan" onclick="nextQuestion()">Next Question →</button>
+      </div>
+    </div>
+
+    <!-- Live Scores -->
+    <div class="card">
+      <h2>🏆 Current Scores</h2>
+      <div class="scoreboard" id="live-scores"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const categories = [
+  {
+    name: "TamVegas",
+    questions: [
+      { q: "If you travelled north from Newcastle along the New England Highway, what is the name of the major road you would have entered Tamworth on?", a: "Goonoo Goonoo Road" },
+      { q: "What is the closest pub to the Tamworth Education Centre?", a: "Joe Macguires" },
+      { q: "Where can you buy marinated crocodile in Tamworth?", a: "The Safari Club" },
+      { q: "What is involved in the rodeo event 'steer wrestling'? Bonus: What is this event also called?", a: "A horse-mounted rider chases a steer, drops from the horse to the steer, then wrestles the steer to the ground by twisting its horns. Objective is to get all four legs of the steer off the ground in the fastest time. AKA 'bulldogging'." },
+      { q: "Where is the fire station located in Tamworth?", a: "Carthage Street, The Ringers Road (South Tamworth Fire Station)" },
+      { q: "Tamworth was the first place in Australia to use:\n\na) Motorised scoots\nb) Electric street lights\nc) Cordless phones\nd) Electric ovens\n\nBonus: What year?", a: "b) Electric street lights - 1888" },
+      { q: "If you saw a blue tractor, what brand would it be?", a: "New Holland, Ford, LS, Farmtrac, Hinomoto" },
+      { q: "In what year was Tamworth proclaimed a city?\n\na) 1946\nb) 1777\nc) 1918\nd) It hasn't yet", a: "a) 1946" },
+      { q: "Which dam provides Tamworth's water supply?", a: "Chaffey Dam" },
+      { q: "What do the following acronyms represent?\n\nAELEC\nTRC\nTEC\nTREC\nNCHA", a: "Australian Equine and Livestock Events Centre, Tamworth Regional Council, Tamworth Education Centre, Tamworth Regional Entertainment Centre, National Cutting Horse Association" }
+    ]
+  },
+  {
+    name: "Sport",
+    questions: [
+      { q: "What sport is Toby Price best known for?", a: "Australian off-road and enduro motorcycle racing" },
+      { q: "Who is the Matildas Captain currently?", a: "Sam Kerr" },
+      { q: "Josh Hazlewood, champion Australian cricketer, calls home to which town in our region?", a: "Bendemeer" },
+      { q: "Which Australian tennis star won Wimbledon in 2021?", a: "Ash Barty" },
+      { q: "How many times has Australia hosted the Olympics?", a: "Twice -- Sydney 2000, Melbourne 1956" },
+      { q: "Which sport did William Henzell play at the London 2012 Olympics?", a: "Table Tennis" },
+      { q: "Who won the men's and women's singles at the 2021 Australian Open?", a: "Rafael Nadal and Ash Barty" },
+      { q: "How long is a marathon? Bonus: What is the current world record?", a: "42.195km. World record: 2:00:35 Kelvin Kiptum (Kenya) set in Chicago 2023" },
+      { q: "Which Australian netball team has won the most Suncorp Super Netball titles since the competition began in 2017?", a: "Sunshine Coast Lightning (2 titles: 2017, 2018)" },
+      { q: "What is the name of the trophy awarded to the winners of the State of Origin series?", a: "State of Origin Shield" }
+    ]
+  },
+  {
+    name: "Pop Culture",
+    questions: [
+      { q: "Who played Kath and Kim in the Australian series of the same name?", a: "Jane Turner and Gina Riley" },
+      { q: "Who wore the famous dress before Kim Kardashian?", a: "Marilyn Monroe", image: "https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fwp-content%2Fblogs.dir%2F6%2Ffiles%2F2022%2F05%2Fkim-kardashian-met-gala-marilyn-monroe-dress-pete-davidson-red-carpet-1.jpg?q=90&w=1400&cbr=1&fit=max" },
+      { q: "Name this artist", a: "Dom Dolla", image: "https://share.google/images/gt9xpO079szknC0qN" },
+      { q: "Which breakfast TV personality was in a band called 'Wilde and Reckless'?\n\na) David Koch\nb) Richard Wilkins\nc) Karl Stefanovic\nd) Peter Stefanovic", a: "b) Richard Wilkins" },
+      { q: "Season 3 of The White Lotus took place in which country?", a: "Thailand" },
+      { q: "What are the names of Taylor Swift's cats?", a: "Meredith Grey, Olivia Benson & Benjamin Button" },
+      { q: "Which Australian movie had the quote 'Tell him he's dreaming'?", a: "The Castle" },
+      { q: "What viral ad starts with Jess Glynne's song 'Hold My Hand' and features bad vacation videos?", a: "Jet2 holiday ad" },
+      { q: "What is Chandler Bing's job in Friends (actual job title)?", a: "Statistical Analysis and Data Reconfiguration" },
+      { q: "What Spice Girl was Victoria Beckham?", a: "Posh Spice" }
+    ]
+  },
+  {
+    name: "Mixed Bag",
+    questions: [
+      { q: "What is someone who shoes horses called?", a: "A farrier" },
+      { q: "What is the sixth planet from the sun?", a: "Saturn" },
+      { q: "What city in France does Elton John own a home?", a: "Nice" },
+      { q: "What was the name of Ross and Monica's childhood dog in Friends?", a: "Chi-Chi" },
+      { q: "What is the only Australian mammal that lays eggs and has electroreceptors to detect prey underwater?", a: "The platypus" },
+      { q: "I was nominated for Young Australian of the Year in 1990 and Australian of the Year in 1998. I am the first person to receive both awards. Who am I?", a: "Cathy Freeman" },
+      { q: "What is the symbol for the chemical element Potassium? Bonus: What is Potassium's atomic number?", a: "K. Atomic number: 19" },
+      { q: "Which comedy show celebrated its 50th anniversary in 2025?", a: "Saturday Night Live" },
+      { q: "What is pogonophobia a fear of?", a: "Beards" },
+      { q: "What was this item used for?", a: "Coffee Grinder", image: "https://share.google/1GsAcJtUoo6cT7guM" }
+    ]
+  },
+  {
+    name: "Paper Airplane Comp",
+    questions: [
+      { q: "🛩️ Paper Airplane Challenge!\n\nEach team creates and flies one paper airplane.\n\nWhich team's airplane will fly the farthest?", a: "Winner determined by flight distance!" }
+    ]
+  },
+  {
+    name: "Bonus Points",
+    questions: [
+      { q: "📸 The Caption Game\n\nA photo will be shown.\n\nTeams submit a caption.\n\nHost chooses the funniest = bonus points!", a: "Funniest caption wins!" },
+      { q: "🔍 Zoomed In Chaos #1\n\nA zoomed-in photo will be shown.\n\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!" },
+      { q: "🔍 Zoomed In Chaos #2\n\nAnother zoomed-in photo will be shown.\n\nTeams must figure out WHO it is!", a: "Correct guess wins bonus points!" },
+      { q: "🧍➡️🧍 Line Up Challenge\n\nTeams must line themselves up WITHOUT TALKING based on:\n\nHEIGHT (shortest to tallest)\n\nFirst team to correctly line up wins!", a: "Fastest correct lineup wins bonus points!" },
+      { q: "🏆 Human-Sized Paper Scissors Rock Tournament\n\nEach team sends 1 person.\n\nSingle elimination bracket.\n\nWinner scores bonus points for their team. ✊✋✌️", a: "Tournament winner's team gets bonus points!" }
+    ]
+  }
+];
+
+let teams = [];
+let currentCat = null;
+let currentQ = 0;
+let answerVisible = false;
+let editingIdx = null;
+
+function addTeam() {
+  const inp = document.getElementById('team-input');
+  const name = inp.value.trim();
+  if (!name) return;
+  teams.push({ name, score: 0 });
+  inp.value = '';
+  renderTeams();
+}
+
+function renderTeams() {
+  const list = document.getElementById('team-list');
+  list.innerHTML = '';
+  const sorted = [...teams].sort((a,b) => b.score - a.score);
+  sorted.forEach(team => {
+    const idx = teams.indexOf(team);
+    const row = document.createElement('div');
+    row.className = 'team-row';
+    const trophy = idx === teams.indexOf(sorted[0]) ? '<span class="trophy">🏆</span>' : '';
+    row.innerHTML = `
+      <div class="team-name">${trophy} ${team.name}</div>
+      <div class="team-actions">
+        <span class="team-score">${team.score}</span>
+        ${editingIdx === idx
+          ? `<input type="number" id="pts-${idx}" placeholder="pts" style="width:80px;">
+             <button class="btn btn-green" onclick="applyPoints(${idx})">✓</button>`
+          : `<button class="btn btn-pink" onclick="startEdit(${idx})">＋</button>`
+        }
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function startEdit(idx) {
+  editingIdx = idx;
+  renderTeams();
+  const inp = document.getElementById(`pts-${idx}`);
+  if (inp) inp.focus();
+}
+
+function applyPoints(idx) {
+  const inp = document.getElementById(`pts-${idx}`);
+  const pts = parseInt(inp ? inp.value : 0) || 0;
+  teams[idx].score += pts;
+  editingIdx = null;
+  renderTeams();
+  renderLiveScores();
+}
+
+function buildCatGrid() {
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+  categories.forEach((cat, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.innerHTML = `<div class="cat-name">${cat.name}</div><div class="cat-count">${cat.questions.length} Question${cat.questions.length > 1 ? 's' : ''}</div>`;
+    btn.onclick = () => startCategory(i);
+    grid.appendChild(btn);
+  });
+}
+
+function startCategory(idx) {
+  currentCat = idx;
+  currentQ = 0;
+  answerVisible = false;
+  document.getElementById('screen-main').classList.add('hidden');
+  document.getElementById('screen-question').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const cat = categories[currentCat];
+  const q = cat.questions[currentQ];
+  document.getElementById('q-cat-title').textContent = cat.name;
+  document.getElementById('q-counter').textContent = `Question ${currentQ + 1} of ${cat.questions.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('a-text').textContent = q.a;
+  document.getElementById('answer-box').classList.add('hidden');
+  answerVisible = false;
+  document.querySelector('.btn-pink').textContent = 'Reveal Answer';
+
+  const img = document.getElementById('q-img');
+  if (q.image) {
+    img.src = q.image;
+    img.classList.remove('hidden');
+  } else {
+    img.src = '';
+    img.classList.add('hidden');
+  }
+
+  renderLiveScores();
+}
+
+function toggleAnswer() {
+  answerVisible = !answerVisible;
+  document.getElementById('answer-box').classList.toggle('hidden', !answerVisible);
+  document.querySelector('.btn-pink').textContent = answerVisible ? 'Hide Answer' : 'Reveal Answer';
+}
+
+function nextQuestion() {
+  if (currentQ < categories[currentCat].questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    goMain();
+  }
+}
+
+function goMain() {
+  currentCat = null;
+  document.getElementById('screen-question').classList.add('hidden');
+  document.getElementById('screen-main').classList.remove('hidden');
+  renderTeams();
+}
+
+function renderLiveScores() {
+  const sb = document.getElementById('live-scores');
+  if (!sb) return;
+  sb.innerHTML = '';
+  teams.forEach(t => {
+    const tile = document.createElement('div');
+    tile.className = 'score-tile';
+    tile.innerHTML = `<div class="sname">${t.name}</div><div class="sval">${t.score}</div>`;
+    sb.appendChild(tile);
+  });
+}
+
+buildCatGrid();
+</script>
+</body>
+</html>

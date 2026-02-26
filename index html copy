@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Who Wants to Be a Clinician</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',sans-serif;min-height:100vh;background:linear-gradient(135deg,#0f172a,#064e3b,#134e4a);color:white;padding:1.5rem}
+    h1{font-size:clamp(1.4rem,4vw,2.8rem);font-weight:900;text-align:center;margin-bottom:1.5rem;text-shadow:0 0 40px rgba(16,185,129,0.9),0 0 20px rgba(236,72,153,0.4)}
+    .card{background:rgba(255,255,255,0.08);border:1px solid rgba(16,185,129,0.4);border-radius:1rem;padding:1.5rem;margin-bottom:1.25rem;box-shadow:0 0 40px rgba(16,185,129,0.3)}
+    .glow{text-shadow:0 0 20px rgba(16,185,129,0.9)}
+    .pink-glow{text-shadow:0 0 20px rgba(236,72,153,0.8)}
+    input{padding:.65rem 1rem;border-radius:.65rem;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.4);color:white;font-size:1rem;outline:none;font-family:inherit;width:100%}
+    input::placeholder{color:rgba(255,255,255,0.4)}
+    button{cursor:pointer;border:none;border-radius:.65rem;font-weight:700;font-family:inherit;transition:transform .12s}
+    button:hover{transform:scale(1.04)}
+    .btn-green{background:linear-gradient(135deg,#10b981,#0d9488);color:white;padding:.7rem 1.4rem;font-size:1rem;box-shadow:0 0 20px rgba(16,185,129,0.4)}
+    .btn-pink{background:linear-gradient(135deg,#ec4899,#a855f7);color:white;padding:.5rem .9rem;font-size:1rem;box-shadow:0 0 20px rgba(236,72,153,0.4)}
+    .btn-red{background:linear-gradient(135deg,#ef4444,#ec4899);color:white;padding:.7rem 1.4rem;font-size:1rem}
+    .btn-cyan{background:linear-gradient(135deg,#10b981,#06b6d4);color:white;padding:.7rem 1.4rem;font-size:1rem}
+    .btn-multi{background:linear-gradient(135deg,#10b981,#ec4899);color:white;padding:.7rem 1.4rem;font-size:1rem}
+    .row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+    .team-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.05);border:1px solid rgba(16,185,129,0.3);border-radius:.75rem;padding:.85rem 1.1rem;margin-bottom:.5rem}
+    .score{font-size:2rem;font-weight:900;text-shadow:0 0 30px rgba(236,72,153,0.9)}
+    .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:600px;margin:0 auto}
+    .cat-btn{padding:1.4rem;background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;color:white;font-size:1.15rem;font-weight:900;text-shadow:0 0 20px rgba(16,185,129,0.8);text-align:center}
+    .cat-sub{font-size:.85rem;font-weight:500;margin-top:.3rem;color:rgba(255,255,255,0.6);text-shadow:none}
+    .q-box{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;padding:1.75rem;margin-bottom:1rem;font-size:1.35rem;font-weight:700;white-space:pre-line;line-height:1.6;text-shadow:0 0 20px rgba(16,185,129,0.7)}
+    .q-img{display:block;max-width:420px;width:100%;border-radius:1rem;margin:1rem auto 0;border:2px solid rgba(16,185,129,0.4);box-shadow:0 0 30px rgba(16,185,129,0.3)}
+    .a-box{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(6,182,212,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:1rem;padding:1.5rem;font-size:1.2rem;line-height:1.6}
+    .score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem}
+    .score-card{background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(236,72,153,0.12));border:1px solid rgba(16,185,129,0.4);border-radius:.75rem;padding:1rem;text-align:center}
+    .ctrl-row{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-bottom:1.25rem}
+    .subtitle{text-align:center;font-size:1.15rem;font-weight:700;margin-bottom:1.5rem}
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var categories = [
+  {
+    name: "TamVegas",
+    questions: [
+      {q: "If you travelled north from Newcastle along the New England Highway, what is the name of the major road you would have entered Tamworth on?", a: "Goonoo Goonoo Road"},
+      {q: "What is the closest pub to the Tamworth Education Centre?", a: "Joe Macguires"},
+      {q: "Where can you buy marinated crocodile in Tamworth?", a: "The Safari Club"},
+      {q: "What is involved in the rodeo event steer wrestling?\nBonus: What is this event also called?", a: "A horse-mounted rider chases a steer, drops from the horse, then wrestles the steer to the ground by twisting its horns. All four legs must leave the ground. Also called bulldogging."},
+      {q: "Where is the fire station located in Tamworth?", a: "Carthage Street / The Ringers Road (South Tamworth Fire Station)"},
+      {q: "Tamworth was the first place in Australia to use:\n\na) Motorised scoots\nb) Electric street lights\nc) Cordless phones\nd) Electric ovens\n\nBonus: What year?", a: "b) Electric street lights — 1888"},
+      {q: "If you saw a blue tractor, what brand would it be?", a: "New Holland, Ford, LS, Farmtrac, Hinomoto"},
+      {q: "In what year was Tamworth proclaimed a city?\n\na) 1946\nb) 1777\nc) 1918\nd) It hasn't yet", a: "a) 1946"},
+      {q: "Which dam provides Tamworth's water supply?", a: "Chaffey Dam"},
+      {q: "What do the following acronyms represent?\n\nAELEC\nTRC\nTEC\nTREC\nNCHA", a: "Australian Equine and Livestock Events Centre, Tamworth Regional Council, Tamworth Education Centre, Tamworth Regional Entertainment Centre, National Cutting Horse Association"}
+    ]
+  },
+  {
+    name: "Sport",
+    questions: [
+      {q: "What sport is Toby Price best known for?", a: "Australian off-road and enduro motorcycle racing"},
+      {q: "Who is the Matildas Captain currently?", a: "Sam Kerr"},
+      {q: "Josh Hazlewood, champion Australian cricketer, calls home to which town in our region?", a: "Bendemeer"},
+      {q: "Which Australian tennis star won Wimbledon in 2021?", a: "Ash Barty"},
+      {q: "How many times has Australia hosted the Olympics?", a: "Twice — Sydney 2000, Melbourne 1956"},
+      {q: "Which sport did William Henzell play at the London 2012 Olympics?", a: "Table Tennis"},
+      {q: "Who won the men's and women's singles at the 2021 Australian Open?", a: "Rafael Nadal and Ash Barty"},
+      {q: "How long is a marathon?\nBonus: What is the current world record?", a: "42.195km. World record: 2:00:35 — Kelvin Kiptum (Kenya), Chicago 2023"},
+      {q: "Which Australian netball team has won the most Suncorp Super Netball titles since 2017?", a: "Sunshine Coast Lightning (2 titles: 2017, 2018)"},
+      {q: "What is the name of the trophy awarded to the winners of the State of Origin series?", a: "State of Origin Shield"}
+    ]
+  },
+  {
+    name: "Pop Culture",
+    questions: [
+      {q: "Who played Kath and Kim in the Australian series of the same name?", a: "Jane Turner and Gina Riley"},
+      {q: "Who wore the famous dress before Kim Kardashian?", a: "Marilyn Monroe", img: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/KimK.jpg"},
+      {q: "Name this artist", a: "Dom Dolla", img: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/domdolla.jpg"},
+      {q: "Which breakfast TV personality was in a band called Wilde and Reckless?\n\na) David Koch\nb) Richard Wilkins\nc) Karl Stefanovic\nd) Peter Stefanovic", a: "b) Richard Wilkins"},
+      {q: "Season 3 of The White Lotus took place in which country?", a: "Thailand"},
+      {q: "What are the names of Taylor Swift's cats?", a: "Meredith Grey, Olivia Benson and Benjamin Button"},
+      {q: "Which Australian movie had the quote: Tell him he's dreaming", a: "The Castle"},
+      {q: "What viral ad starts with Jess Glynne's song Hold My Hand and features bad vacation videos?", a: "Jet2 holiday ad"},
+      {q: "What is Chandler Bing's job in Friends — actual job title?", a: "Statistical Analysis and Data Reconfiguration"},
+      {q: "What Spice Girl was Victoria Beckham?", a: "Posh Spice"}
+    ]
+  },
+  {
+    name: "Mixed Bag",
+    questions: [
+      {q: "What is someone who shoes horses called?", a: "A farrier"},
+      {q: "What is the sixth planet from the sun?", a: "Saturn"},
+      {q: "What city in France does Elton John own a home?", a: "Nice"},
+      {q: "What was the name of Ross and Monica's childhood dog in Friends?", a: "Chi-Chi"},
+      {q: "What is the only Australian mammal that lays eggs and has electroreceptors to detect prey underwater?", a: "The platypus"},
+      {q: "I was nominated for Young Australian of the Year in 1990 and Australian of the Year in 1998. I am the first person to receive both awards. Who am I?", a: "Cathy Freeman"},
+      {q: "What is the symbol for the chemical element Potassium?\nBonus: What is Potassium's atomic number?", a: "K. Atomic number: 19"},
+      {q: "Which comedy show celebrated its 50th anniversary in 2025?", a: "Saturday Night Live"},
+      {q: "What is pogonophobia a fear of?", a: "Beards"},
+      {q: "What was this item used for?", a: "Coffee Grinder", img: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/coffee%20grinder.jpg"}
+    ]
+  },
+  {
+    name: "Paper Airplane",
+    questions: [
+      {q: "Paper Airplane Challenge!\n\nEach team creates and flies one paper airplane.\n\nWhich team's airplane will fly the farthest?", a: "Winner determined by flight distance!"}
+    ]
+  },
+  {
+    name: "Bonus Points",
+    questions: [
+      {q: "The Caption Game\n\nTeams submit a caption for the image below.\nHost chooses the funniest = bonus points!", a: "Funniest caption wins!", img: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/theoffice.jpg"},
+      {q: "Zoomed In Chaos #1\n\nWho is this?", a: "Millie Bobby Brown!", img: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/MBB%20zoomed.jpg", aimg: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/millie%20norm.jpg"},
+      {q: "Zoomed In Chaos #2\n\nWho is this?", a: "Harry Styles!", img: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/harry%20zoomed.jpg", aimg: "https://raw.githubusercontent.com/jbillett57-ui/Who-wants-to-be-a-clinician/main/harry%20norm.jpg"},
+      {q: "Line Up Challenge\n\nTeams must line up WITHOUT TALKING\nbased on HEIGHT (shortest to tallest).\n\nFirst correct team wins!", a: "Fastest correct lineup wins bonus points!"},
+      {q: "Human Paper Scissors Rock\n\nEach team sends 1 person.\nSingle elimination bracket.\nWinner scores bonus points for their team!", a: "Tournament winner gets bonus points!"}
+    ]
+  }
+];
+
+var teams = [];
+var currentCat = null;
+var currentQ = 0;
+var showAnswer = false;
+var editingTeam = null;
+
+function render() {
+  document.getElementById("app").innerHTML = currentCat === null ? mainScreen() : questionScreen();
+  bindEvents();
+}
+
+function mainScreen() {
+  var sorted = teams.slice().sort(function(a,b){ return b.score - a.score; });
+  var teamRows = sorted.map(function(t, i) {
+    var ri = teams.indexOf(t);
+    var scoreControls = editingTeam === ri
+      ? "<input id='pts-input' type='number' placeholder='Pts' style='width:65px;padding:.35rem;text-align:center;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.4);color:white;border-radius:.5rem;outline:none;font-family:inherit'/>" +
+        "<button class='btn-green' style='padding:.4rem .8rem' onclick='applyScore(" + ri + ")'>OK</button>" +
+        "<button class='btn-red' style='padding:.4rem .8rem' onclick='cancelEdit()'>X</button>"
+      : "<button class='btn-pink' onclick='startEdit(" + ri + ")'>+ Score</button>";
+    return "<div class='team-row'>" +
+      "<span class='glow' style='font-weight:700;font-size:1.05rem'>" + (i===0 ? "🏆 " : "") + t.name + "</span>" +
+      "<div class='row'><span class='score'>" + t.score + "</span>" + scoreControls + "</div>" +
+      "</div>";
+  }).join("");
+
+  var catBtns = categories.map(function(c, i) {
+    return "<button class='cat-btn' onclick='startCat(" + i + ")'>" + c.name +
+      "<div class='cat-sub'>" + c.questions.length + " question" + (c.questions.length > 1 ? "s" : "") + "</div></button>";
+  }).join("");
+
+  return "<h1>WHO WANTS TO BE A <s>MILLIONAIRE</s> CLINICIAN! 💉</h1>" +
+    "<div class='card'>" +
+      "<h3 class='glow' style='font-size:1.3rem;margin-bottom:1rem'>Team Setup</h3>" +
+      "<div class='row' style='margin-bottom:1rem'>" +
+        "<input id='team-input' type='text' placeholder='Enter team name...' style='flex:1;min-width:150px'/>" +
+        "<button class='btn-green' onclick='addTeam()'>Add Team</button>" +
+      "</div>" +
+      teamRows +
+    "</div>" +
+    "<div class='card'>" +
+      "<h3 class='glow' style='font-size:1.3rem;margin-bottom:1rem'>Select a Category</h3>" +
+      "<div class='cat-grid'>" + catBtns + "</div>" +
+    "</div>";
+}
+
+function questionScreen() {
+  var cat = categories[currentCat];
+  var q = cat.questions[currentQ];
+  var imgHtml = q.img ? "<img class='q-img' src='" + q.img + "' alt='Question image'/>" : "";
+  var answerImgHtml = showAnswer && q.aimg ? "<img class='q-img' src='" + q.aimg + "' alt='Answer image'/>" : "";
+  var answerHtml = showAnswer
+    ? "<div class='a-box'><strong class='glow'>Answer:</strong><br/>" + q.a + answerImgHtml + "</div>"
+    : "";
+  var nextLabel = currentQ < cat.questions.length - 1 ? "Next Question" : "Finish Category";
+
+  var scoreCards = teams.map(function(t, i) {
+    var ctrl = editingTeam === i
+      ? "<div class='row' style='justify-content:center;margin-top:.4rem'>" +
+          "<input id='pts-input' type='number' placeholder='Pts' style='width:60px;padding:.3rem;text-align:center;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.4);color:white;border-radius:.5rem;outline:none;font-family:inherit'/>" +
+          "<button class='btn-green' style='padding:.3rem .6rem' onclick='applyScore(" + i + ")'>OK</button>" +
+        "</div>"
+      : "<button class='btn-pink' style='margin-top:.4rem;padding:.3rem .7rem;font-size:.85rem' onclick='startEdit(" + i + ")'>+ Score</button>";
+    return "<div class='score-card'>" +
+      "<div class='glow' style='font-weight:700;font-size:.9rem;margin-bottom:.25rem'>" + t.name + "</div>" +
+      "<div class='score'>" + t.score + "</div>" + ctrl +
+      "</div>";
+  }).join("");
+
+  return "<h1 style='font-size:clamp(1.4rem,3vw,2.2rem)'>" + cat.name + "</h1>" +
+    "<p class='subtitle pink-glow'>Question " + (currentQ+1) + " of " + cat.questions.length + "</p>" +
+    "<div class='card'><div class='q-box'>" + q.q + imgHtml + "</div>" + answerHtml + "</div>" +
+    "<div class='ctrl-row'>" +
+      "<button class='btn-red' onclick='goHome()'>Back to Main</button>" +
+      "<button class='btn-multi' onclick='toggleAnswer()'>" + (showAnswer ? "Hide Answer" : "Reveal Answer") + "</button>" +
+      "<button class='btn-cyan' onclick='nextQ()'>" + nextLabel + "</button>" +
+    "</div>" +
+    "<div class='card'>" +
+      "<h3 class='glow' style='font-size:1.15rem;margin-bottom:.85rem'>Scores</h3>" +
+      "<div class='score-grid'>" + scoreCards + "</div>" +
+    "</div>";
+}
+
+function bindEvents() {
+  var ti = document.getElementById("team-input");
+  if (ti) ti.addEventListener("keypress", function(e){ if(e.key==="Enter") addTeam(); });
+  var pi = document.getElementById("pts-input");
+  if (pi) { pi.focus(); pi.addEventListener("keypress", function(e){ if(e.key==="Enter") applyScore(editingTeam); }); }
+}
+
+function addTeam() {
+  var inp = document.getElementById("team-input");
+  var name = inp ? inp.value.trim() : "";
+  if (name) { teams.push({name: name, score: 0}); render(); }
+}
+function startEdit(i) { editingTeam = i; render(); }
+function cancelEdit() { editingTeam = null; render(); }
+function applyScore(i) {
+  var pi = document.getElementById("pts-input");
+  if (pi) teams[i].score += parseInt(pi.value) || 0;
+  editingTeam = null; render();
+}
+function startCat(i) { currentCat = i; currentQ = 0; showAnswer = false; editingTeam = null; render(); }
+function goHome() { currentCat = null; showAnswer = false; editingTeam = null; render(); }
+function toggleAnswer() { showAnswer = !showAnswer; render(); }
+function nextQ() {
+  if (currentQ < categories[currentCat].questions.length - 1) { currentQ++; showAnswer = false; render(); }
+  else goHome();
+}
+
+render();
+</script>
+</body>
+</html>
